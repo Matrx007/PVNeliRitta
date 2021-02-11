@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="PVNeliRitta:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/PVNeliRitta_jar</output-path>
+    <root id="archive" name="PVNeliRitta.jar">
+      <element id="module-output" name="PVNeliRitta" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/MX Engine.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
