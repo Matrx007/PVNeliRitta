@@ -65,9 +65,12 @@ public class BackEnd {
     * 
     * playerID - either 1 or 2, representing either player 1 or player 2
     * x - the column where to place the circle (left to right)
+    *
+    * Returns false if a circle could not be placed at the given location.
     * */
-    public void executePlayerTurn(int playerID, int x) {
+    public boolean executePlayerTurn(int playerID, int x) {
         /* TODO */
+        return false;
     }
 
     /*
