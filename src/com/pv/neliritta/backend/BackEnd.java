@@ -13,6 +13,28 @@ package com.pv.neliritta.backend;
 public class BackEnd {
 
     /*
+    * When a new game starts, this constructor will be called
+    *
+    * 'boardWidth' and 'boardHeight' should be used to initialize the game
+    * board (aka 'private int[][] board').
+    * */
+    public BackEnd(int boardWidth, int boardHeight) {
+        /* TODO */
+    }
+
+    /*
+    * When a saved game is loaded, this constructor will be called.
+    *
+    * 'board' will contain the current state of the game board.
+    *
+    * 'whoseTurn' is either a '0' when no-one is winning (game is still going on) or
+    * an ID of the player who got 4 circles in a row, column or in a diagonal.
+    * */
+    public BackEnd(int[][] board, int whoseTurn) {
+        /* TODO */
+    }
+
+    /*
     * Should be modified after every turn by either the function 'executePlayersTurn(int playerID)' or
     * 'executeComputersTurn()'.
     * */
