@@ -19,7 +19,8 @@ public class Board implements GameComponent {
     /* Gameplay */
 
     private int whoseTurn = 0;
-    private boolean againstComputer = false;
+    private int whoWon = 0;
+    public boolean againstComputer = false;
 
     // Used to make the computer behave more like a human by taking time to think (in seconds)
     private float computerThinkingTime = 0;
@@ -32,6 +33,8 @@ public class Board implements GameComponent {
 
     public Color player1Color = new Color(92, 124, 138);
     public Color player2Color = new Color(135, 98, 91);
+
+    private int mouseOverColumn = -1;
 
     /* Layout */
     float width, height, padding, topLeftX, topLeftY, bottomRightX, bottomRightY, holeSpacing;
@@ -77,27 +80,33 @@ public class Board implements GameComponent {
 
     @Override
     public void update(double deltaTime) {
+        if(whoWon != 0) return;
+
         /* If mouse is on top of the board */
+        mouseOverColumn = -1;
         if(gameContainer.getGame().mouseX > topLeftX &&
                 gameContainer.getGame().mouseX < bottomRightX &&
                 gameContainer.getGame().mouseY < bottomRightY &&
                 gameContainer.getGame().mouseY > topLeftY - padding) {
-            int column = (int)((gameContainer.getGame().mouseX - topLeftX) / holeSpacing);
+            mouseOverColumn = (int)((gameContainer.getGame().mouseX - topLeftX) / holeSpacing);
 
             if(gameContainer.getGame().input.isButtonUp(PConstants.LEFT)) {
                 if(againstComputer) {
                     if(whoseTurn == 1) {
-                        backEnd.executePlayerTurn(1, column);
-                        System.out.println("Player 1 inserted a circle at "+column);
+                        boolean result = backEnd.executePlayerTurn(1, mouseOverColumn);
 
-                        computerThinkingTime = (float) (Math.random() * 3 + 3);
+                        computerThinkingTime = (float) (Math.random() * 2 + 2);
+
+                        whoseTurn = 2;
+
+                        whoWon = backEnd.whoWon();
                     }
                 } else {
-                    System.out.println("Player "+whoseTurn+" inserted a circle at "+column);
-                    backEnd.executePlayerTurn(whoseTurn, column);
+                    boolean result = backEnd.executePlayerTurn(whoseTurn, mouseOverColumn);
+
                     whoseTurn = 1 + (whoseTurn) % 2;
 
-                    System.out.println(Arrays.deepToString(boardState));
+                    whoWon = backEnd.whoWon();
                 }
             }
         }
@@ -106,7 +115,8 @@ public class Board implements GameComponent {
         if(againstComputer && whoseTurn == 2) {
             if(computerThinkingTime < 0) {
                 int column = backEnd.executeComputerTurn();
-                System.out.println("Computer inserted a circle at "+column);
+
+                whoWon = backEnd.whoWon();
 
                 computerThinkingTime = 0;
                 whoseTurn = 1;
@@ -130,9 +140,9 @@ public class Board implements GameComponent {
 
         for(int i = 0; i < boardWidth; i++) {
             for(int j = 0; j < boardHeight; j++) {
-                if(boardState[i][j] == 1) {
+                if(backEnd.currentBoardState()[i][(boardHeight-1)-j] == 1) {
                     gameContainer.getGame().fill(player1Color.r, player1Color.g, player1Color.b, player1Color.a);
-                } else if(boardState[i][j] == 2) {
+                } else if(backEnd.currentBoardState()[i][(boardHeight-1)-j] == 2) {
                     gameContainer.getGame().fill(player2Color.r, player2Color.g, player2Color.b, player2Color.a);
                 } else {
                     gameContainer.getGame().fill(background.r, background.g, background.b, background.a);
@@ -144,6 +154,13 @@ public class Board implements GameComponent {
                         holeSpacing / 2f);
             }
         }
+
+        if(mouseOverColumn != -1 && !(againstComputer && whoseTurn == 2))  {
+            gameContainer.getGame().fill(255, 255, 255, 16);
+            gameContainer.getGame().noStroke();
+
+            gameContainer.getGame().rect(topLeftX + mouseOverColumn * holeSpacing, topLeftY, holeSpacing, height);
+        }
     }
 
     public int getWhoseTurn() {
@@ -152,5 +169,9 @@ public class Board implements GameComponent {
 
     public boolean isAgainstComputer() {
         return againstComputer;
+    }
+
+    public int getWhoWon() {
+        return whoWon;
     }
 }

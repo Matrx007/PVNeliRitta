@@ -25,9 +25,6 @@ public class GUI implements GameComponent {
     }
     State state = State.MAIN_MENU;
 
-    /* Game board, will be modified by 'BackEnd' */
-    public Board board;
-
     public GUI(GameContainer gameContainer) {
         this.gameContainer = gameContainer;
     }
@@ -101,12 +98,19 @@ public class GUI implements GameComponent {
                 () -> ( gameContainer.getGame().pixelWidth - 384 ) / 2f,
                 () -> ( gameContainer.getGame().pixelHeight - ( 64 + 16 ) * numButtons ) / 2f + (64 + 16) * 0,
                 () -> 384, () -> 64, "MÄNGIJA VS MÄNGIJA",
-                () -> state = State.IN_GAME ));
+                () -> {
+            state = State.IN_GAME;
+            board.againstComputer = false;
+                } ));
 
         mainMenu_buttons.put("playerVsComputer", new Button(gameContainer,
                 () -> ( gameContainer.getGame().pixelWidth - 384 ) / 2f,
                 () -> ( gameContainer.getGame().pixelHeight - ( 64 + 16 ) * numButtons ) / 2f + ( 64 + 16 ) * 1,
-                () -> 384, () -> 64, "MÄNGIJA VS ARVUTI", () -> {}));
+                () -> 384, () -> 64, "MÄNGIJA VS ARVUTI",
+                () -> {
+                    state = State.IN_GAME;
+                    board.againstComputer = true;
+                } ));
 
         mainMenu_buttons.put("loadGame", new Button(gameContainer,
                 () -> ( gameContainer.getGame().pixelWidth - 384 ) / 2f,
@@ -140,6 +144,9 @@ public class GUI implements GameComponent {
      * #####################
      * */
 
+    /* Game board, will be modified by 'BackEnd' */
+    public Board board;
+
     Label inGame_whoseTurn;
 
     public void setup_inGame() {
@@ -156,6 +163,13 @@ public class GUI implements GameComponent {
             inGame_whoseTurn.text = "Player 1";
         } else if(whoseTurn == 2) {
             inGame_whoseTurn.text = board.isAgainstComputer() ? "Computer" : "Player 2";
+        }
+
+        int whoWon = board.getWhoWon();
+        if(whoWon == 1) {
+            inGame_whoseTurn.text = "Player 1 won!";
+        } else if(whoWon == 2) {
+            inGame_whoseTurn.text = board.isAgainstComputer() ? "Computer won!" : "Player 2 won!";
         }
 
         inGame_whoseTurn.update(deltaTime);

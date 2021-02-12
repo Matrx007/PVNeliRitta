@@ -3,6 +3,8 @@ package com.pv.neliritta.backend;
 // Written by Gregor Suurvarik (everything else)
 
 
+import java.util.Random;
+
 /*
 * Data about circles will be stored as an integer, 0 meaning 'empty', '1' meaning player 1 placed it
 * and '2' meaning player 2 or the computer placed it.
@@ -163,7 +165,11 @@ public class BackEnd {
     * */
     public int executeComputerTurn() {
         /* TODO */
-        return -1;
+        int column = new Random().nextInt(board.length);
+
+        boolean result = executePlayerTurn(2, column);
+
+        return result ? column : -1;
     }
 
     /*
