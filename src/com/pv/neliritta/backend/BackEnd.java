@@ -19,7 +19,8 @@ public class BackEnd {
     * board (aka 'private int[][] board').
     * */
     public BackEnd(int boardWidth, int boardHeight) {
-        /* TODO */
+        // Initializes board
+        this.board = new int[boardWidth][boardHeight];
     }
 
     /*
@@ -32,6 +33,7 @@ public class BackEnd {
     * */
     public BackEnd(int[][] board, int whoseTurn) {
         /* TODO */
+        this.board = board;
     }
 
     /*
@@ -44,8 +46,7 @@ public class BackEnd {
     * Returns the current state of the game board (aka 'private int[][] board').
     * */
     public int[][] currentBoardState() {
-        /* TODO */
-        return null;
+        return board;
     }
 
     /*
@@ -55,7 +56,81 @@ public class BackEnd {
     * got 4 circles in a row, column or in a diagonal.
      * */
     public int whoWon() {
-        /* TODO */
+        boolean[][] boardPlayer = new boolean[board.length][board[1].length];
+        boolean[][] boardPlayer2 = new boolean[board.length][board[1].length];
+        // TODO: Test this thing with test cases
+        try {
+            // Converts board to player based boolean array for easier checking
+            for (int i = 0; i < board.length; i++) {
+                for (int j = 0; j < board[i].length; j++) {
+                    if (board[i][j] == 1) {
+                        // Setting values to correct ones
+                        boardPlayer[i][j] = true;
+                        boardPlayer2[i][j] = false;
+                    } else if (board[i][j] == 2) {
+                        boardPlayer[i][j] = false;
+                        boardPlayer2[i][j] = true;
+                    }
+                }
+            }
+            // checking from bottom to top and left to right to get horizontal rows of 4
+            for (int j = 0; j < board[1].length; j++) {
+                for (int i = 0; i < board.length - 3; i++) {
+                    // Player board check
+                    if (boardPlayer[i][j] && boardPlayer[i + 1][j]
+                            && boardPlayer[i + 2][j] && boardPlayer[i + 3][j]) {
+                        return 1;
+                        // Player 2 board check
+                    } else if (boardPlayer2[i][j] && boardPlayer2[i + 1][j]
+                            && boardPlayer2[i + 2][j] && boardPlayer2[i + 3][j]) {
+                        return 2;
+                    }
+                }
+            }
+            // Checking from left to right and bottom to top if there are vertical rows of 4
+            for (int i = 0; i < board.length; i++) {
+                for (int j = 0; j < board[i].length - 3; j++) {
+                    // Player board
+                    if (boardPlayer[i][j] && boardPlayer[i][j + 1]
+                            && boardPlayer[i][j + 2] && boardPlayer[i][j + 3]) {
+                        return 1;
+                        // Player 2 board
+                    } else if (boardPlayer2[i][j] && boardPlayer2[i][j + 1]
+                            && boardPlayer2[i][j + 2] && boardPlayer2[i][j + 3]) {
+                        return 2;
+                    }
+                }
+            }
+            // Checks board for diagonal rows of 4 (down left to up right)
+            for (int i = 0; i < board.length - 3; i++) {
+                for (int j = 0; j < board[i].length - 3; j++) {
+                    if (boardPlayer[i][j] && boardPlayer[i + 1][j + 1]
+                            && boardPlayer[i + 2][j + 2] && boardPlayer[i + 3][j + 3]) {
+                        return 1;
+                    } else if (boardPlayer2[i][j] && boardPlayer2[i + 1][j + 1]
+                            && boardPlayer2[i + 2][j + 2] && boardPlayer2[i + 3][j + 3]) {
+                        return 2;
+                    }
+                }
+            }
+            // Checks board for diagonal rows of 4 (up left to down right)
+            for (int i = 3; i < board.length; i++) {
+                for (int j = 0; j < board[i].length - 3; j++) {
+                    // Player board
+                    if (boardPlayer[i][j] && boardPlayer[i - 1][j + 1]
+                            && boardPlayer[i - 2][j + 2] && boardPlayer[i - 3][j + 3]) {
+                        return 1;
+                        // Player 2 board
+                    } else if (boardPlayer2[i][j] && boardPlayer2[i - 1][j + 1]
+                            && boardPlayer2[i - 2][j + 2] && boardPlayer2[i - 3][j + 3]) {
+                        return 2;
+                    }
+                }
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println(e.getMessage());
+        }
+        // To get to here there can not be any rows of 4 at the moment.
         return 0;
     }
 
@@ -65,12 +140,17 @@ public class BackEnd {
     * 
     * playerID - either 1 or 2, representing either player 1 or player 2
     * x - the column where to place the circle (left to right)
-    *
-    * Returns false if a circle could not be placed at the given location.
     * */
     public boolean executePlayerTurn(int playerID, int x) {
-        /* TODO */
-        return false;
+        // Gets boards highest point where dod can be placed
+        int y = possibleHighest(x);
+        // If doesn't exist returns;
+        if (y == -1) {
+            return false;
+        }
+        // Set on board player made change
+        board[x][y] = playerID;
+        return true;
     }
 
     /*
@@ -83,6 +163,20 @@ public class BackEnd {
     * */
     public int executeComputerTurn() {
         /* TODO */
+        return -1;
+    }
+
+    /*
+    * Function will return possible highest point where dot can be placed
+    * returns -1 if column is full
+    * otherwise returns highest point
+    * */
+    private int possibleHighest(int x) {
+        for (int i = 0; i < board[x].length; i++) {
+            if (board[x][i] != 0) {
+                return i;
+            }
+        }
         return -1;
     }
 }
