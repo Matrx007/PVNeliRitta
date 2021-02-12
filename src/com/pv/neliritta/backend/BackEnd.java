@@ -19,9 +19,7 @@ public class BackEnd {
     * board (aka 'private int[][] board').
     * */
     public BackEnd(int boardWidth, int boardHeight) {
-        // Sets Board values
-        this.bWidth = boardWidth;
-        this.bHeight = boardHeight;
+        // Initializes board
         this.board = new int[boardWidth][boardHeight];
     }
 
@@ -42,7 +40,6 @@ public class BackEnd {
     * 'executeComputersTurn()'.
     * */
     private int[][] board;
-    private int bWidth, bHeight;
 
     /*
     * Returns the current state of the game board (aka 'private int[][] board').
@@ -58,13 +55,13 @@ public class BackEnd {
     * got 4 circles in a row, column or in a diagonal.
      * */
     public int whoWon() {
-        boolean[][] boardPlayer = new boolean[this.bWidth][this.bHeight];
-        boolean[][] boardPlayer2 = new boolean[this.bWidth][this.bHeight];
+        boolean[][] boardPlayer = new boolean[board.length][board[1].length];
+        boolean[][] boardPlayer2 = new boolean[board.length][board[1].length];
         // TODO: Test this thing with test cases
         try {
             // Converts board to player based boolean array for easier checking
-            for (int i = 0; i < this.bWidth; i++) {
-                for (int j = 0; j < this.bHeight; j++) {
+            for (int i = 0; i < board.length; i++) {
+                for (int j = 0; j < board[i].length; j++) {
                     if (board[i][j] == 1) {
                         // Setting values to correct ones
                         boardPlayer[i][j] = true;
@@ -76,8 +73,8 @@ public class BackEnd {
                 }
             }
             // checking from bottom to top and left to right to get horizontal rows of 4
-            for (int j = 0; j < this.bHeight; j++) {
-                for (int i = 0; i < this.bWidth - 3; i++) {
+            for (int j = 0; j < board[1].length; j++) {
+                for (int i = 0; i < board.length - 3; i++) {
                     // Player board check
                     if (boardPlayer[i][j] && boardPlayer[i + 1][j]
                             && boardPlayer[i + 2][j] && boardPlayer[i + 3][j]) {
@@ -90,8 +87,8 @@ public class BackEnd {
                 }
             }
             // Checking from left to right and bottom to top if there are vertical rows of 4
-            for (int i = 0; i < this.bWidth; i++) {
-                for (int j = 0; j < this.bHeight - 3; j++) {
+            for (int i = 0; i < board.length; i++) {
+                for (int j = 0; j < board[i].length - 3; j++) {
                     // Player board
                     if (boardPlayer[i][j] && boardPlayer[i][j + 1]
                             && boardPlayer[i][j + 2] && boardPlayer[i][j + 3]) {
@@ -104,8 +101,8 @@ public class BackEnd {
                 }
             }
             // Checks board for diagonal rows of 4 (down left to up right)
-            for (int i = 0; i < this.bWidth - 3; i++) {
-                for (int j = 0; j < this.bHeight - 3; j++) {
+            for (int i = 0; i < board.length - 3; i++) {
+                for (int j = 0; j < board[i].length - 3; j++) {
                     if (boardPlayer[i][j] && boardPlayer[i + 1][j + 1]
                             && boardPlayer[i + 2][j + 2] && boardPlayer[i + 3][j + 3]) {
                         return 1;
@@ -116,8 +113,8 @@ public class BackEnd {
                 }
             }
             // Checks board for diagonal rows of 4 (up left to down right)
-            for (int i = 3; i < this.bWidth; i++) {
-                for (int j = 0; j < this.bHeight - 3; j++) {
+            for (int i = 3; i < board.length; i++) {
+                for (int j = 0; j < board[i].length - 3; j++) {
                     // Player board
                     if (boardPlayer[i][j] && boardPlayer[i - 1][j + 1]
                             && boardPlayer[i - 2][j + 2] && boardPlayer[i - 3][j + 3]) {
@@ -144,11 +141,13 @@ public class BackEnd {
     * x - the column where to place the circle (left to right)
     * */
     public void executePlayerTurn(int playerID, int x) {
-        // Set on board player made change
+        // Gets boards highest point where dod can be placed
         int y = possibleHighest(x);
+        // If doesn't exist returns;
         if (y == -1) {
             return;
         }
+        // Set on board player made change
         board[x][y] = playerID;
     }
 
@@ -171,7 +170,7 @@ public class BackEnd {
     * otherwise returns highest point
     * */
     private int possibleHighest(int x) {
-        for (int i = 0; i < this.bHeight; i++) {
+        for (int i = 0; i < board[x].length; i++) {
             if (board[x][i] != 0) {
                 return i;
             }
