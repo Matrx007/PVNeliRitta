@@ -28,7 +28,7 @@ public class BackEnd {
     * 'board' will contain the current state of the game board.
     *
     * 'whoseTurn' is either a '0' when no-one is winning (game is still going on) or
-    * an ID of the player who got 4 circles in a row, column or in a diagonal.
+    * an ID of the player whose turn is at the moment (meaning (s)he hasn't done anything yet but is about to'.
     * */
     public BackEnd(int[][] board, int whoseTurn) {
         /* TODO */
