@@ -36,6 +36,7 @@ public class BackEnd {
     public BackEnd(int[][] board, int whoseTurn) {
         /* TODO */
         this.board = board;
+        this.whoseTurn = whoseTurn;
     }
 
     /*
@@ -43,12 +44,20 @@ public class BackEnd {
     * 'executeComputersTurn()'.
     * */
     private int[][] board;
+    private int whoseTurn;
 
     /*
     * Returns the current state of the game board (aka 'private int[][] board').
     * */
     public int[][] currentBoardState() {
         return board;
+    }
+
+    /*
+     * Returns the whoseTurn.
+     * */
+    public int getWhoseTurn() {
+        return whoseTurn;
     }
 
     /*
