@@ -140,15 +140,16 @@ public class BackEnd {
     * playerID - either 1 or 2, representing either player 1 or player 2
     * x - the column where to place the circle (left to right)
     * */
-    public void executePlayerTurn(int playerID, int x) {
+    public boolean executePlayerTurn(int playerID, int x) {
         // Gets boards highest point where dod can be placed
         int y = possibleHighest(x);
         // If doesn't exist returns;
         if (y == -1) {
-            return;
+            return false;
         }
         // Set on board player made change
         board[x][y] = playerID;
+        return true;
     }
 
     /*
