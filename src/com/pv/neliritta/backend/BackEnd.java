@@ -182,7 +182,7 @@ public class BackEnd {
     * */
     private int possibleHighest(int x) {
         for (int i = 0; i < board[x].length; i++) {
-            if (board[x][i] != 0) {
+            if (board[x][i] == 0) {
                 return i;
             }
         }
