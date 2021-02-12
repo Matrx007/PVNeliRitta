@@ -33,6 +33,7 @@ public class BackEnd {
     * */
     public BackEnd(int[][] board, int whoseTurn) {
         /* TODO */
+        this.board = board;
     }
 
     /*
