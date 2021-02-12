@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /*
- * This class draws the com.pv.neliritta.GUI and talks with 'com.pv.neliritta.BackEnd' class (written by Gregor Suurvarik), which reacts to user
+ * This class draws the com.pv.neliritta.GUI and talks with 'com.pv.neliritta.backend.BackEnd' class (written by Gregor Suurvarik), which reacts to user
  * input and (if playing against the computer, ) takes turns as well.
  * */
 public class GUI {
