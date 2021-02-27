@@ -4,7 +4,7 @@ import com.pv.neliritta.gui.GameComponent;
 import com.pv.neliritta.gui.components.Button;
 import com.pv.neliritta.gui.components.Label;
 import com.pv.neliritta.gui.ingame.Board;
-import com.ydgames.mxe.GameContainer;
+import processing.core.PConstants;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,8 +15,11 @@ import java.util.Map;
  * */
 public class GUI implements GameComponent {
 
+    // guiOffsetX = (pixelWidth - guiSize) / 2
+    int guiOffsetX, guiOffsetY;
+
     /* Used to access the engine, this will be passed to he 'com.pv.neliritta.GUI' class through its constructor */
-    GameContainer gameContainer;
+    Main main;
 
     /* Used to control the program flow */
     enum State {
@@ -25,8 +28,8 @@ public class GUI implements GameComponent {
     }
     State state = State.MAIN_MENU;
 
-    public GUI(GameContainer gameContainer) {
-        this.gameContainer = gameContainer;
+    public GUI(Main main) {
+        this.main = main;
     }
 
     public void setup() {
@@ -64,6 +67,11 @@ public class GUI implements GameComponent {
 
     @Override
     public void render() {
+        main.getGame().rectMode(PConstants.CENTER);
+        main.getGame().ellipseMode(PConstants.CENTER);
+
+        main.getGame().pushMatrix();
+        main.getGame().translate(main.getGame().pixelWidth / 2f, main.getGame().pixelHeight / 2f);
         switch (state) {
             case MAIN_MENU:
                 render_mainMenu();
@@ -76,6 +84,7 @@ public class GUI implements GameComponent {
                 System.out.println("A big OOF occurred");
                 break;
         }
+        main.getGame().popMatrix();
     }
 
     /* #################
@@ -94,33 +103,37 @@ public class GUI implements GameComponent {
 
         int numButtons = 5;
 
-        mainMenu_buttons.put("playerVsPlayer", new Button(gameContainer,
-                () -> ( gameContainer.getGame().pixelWidth - 384 ) / 2f,
-                () -> ( gameContainer.getGame().pixelHeight - ( 64 + 16 ) * numButtons ) / 2f + (64 + 16) * 0,
-                () -> 384, () -> 64, "MÄNGIJA VS MÄNGIJA",
+        float buttonWidth = 384;
+        float buttonHeight = 64;
+        float buttonSpacing = 16;
+
+        mainMenu_buttons.put("playerVsPlayer", new Button(main,
+                () -> 0,
+                () -> (buttonHeight + buttonSpacing) * -2,
+                () -> buttonWidth, () -> buttonHeight, "MÄNGIJA VS MÄNGIJA",
                 () -> {
             state = State.IN_GAME;
             board.againstComputer = false;
                 } ));
 
-        mainMenu_buttons.put("playerVsComputer", new Button(gameContainer,
-                () -> ( gameContainer.getGame().pixelWidth - 384 ) / 2f,
-                () -> ( gameContainer.getGame().pixelHeight - ( 64 + 16 ) * numButtons ) / 2f + ( 64 + 16 ) * 1,
-                () -> 384, () -> 64, "MÄNGIJA VS ARVUTI",
+        mainMenu_buttons.put("playerVsComputer", new Button(main,
+                () -> 0,
+                () -> (buttonHeight + buttonSpacing) * -1,
+                () -> buttonWidth, () -> buttonHeight, "MÄNGIJA VS ARVUTI",
                 () -> {
                     state = State.IN_GAME;
                     board.againstComputer = true;
                 } ));
 
-        mainMenu_buttons.put("loadGame", new Button(gameContainer,
-                () -> ( gameContainer.getGame().pixelWidth - 384 ) / 2f,
-                () -> ( gameContainer.getGame().pixelHeight - ( 64 + 16 ) * numButtons ) / 2f + ( 64 + 16 ) * 2,
-                () -> 384, () -> 64, "AVA VARASEM MÄNG", () -> {}));
+        mainMenu_buttons.put("loadGame", new Button(main,
+                () -> 0,
+                () -> (buttonHeight + buttonSpacing) * 0,
+                () -> buttonWidth, () -> buttonHeight, "AVA VARASEM MÄNG", () -> {}));
 
-        mainMenu_buttons.put("quit", new Button(gameContainer,
-                () -> ( gameContainer.getGame().pixelWidth - 384 ) / 2f,
-                () -> ( gameContainer.getGame().pixelHeight - ( 64 + 16 ) * numButtons ) / 2f + ( 64 + 16 ) * 4,
-                () -> 384, () -> 64, "LAHKU MÄNGUST", () -> {}));
+        mainMenu_buttons.put("quit", new Button(main,
+                () -> 0,
+                () -> (buttonHeight + buttonSpacing) * 2,
+                () -> buttonWidth, () -> buttonHeight, "LAHKU MÄNGUST", () -> {}));
     }
 
     public void update_mainMenu(double deltaTime) {
@@ -150,9 +163,9 @@ public class GUI implements GameComponent {
     Label inGame_whoseTurn;
 
     public void setup_inGame() {
-        inGame_whoseTurn = new Label(gameContainer,
-                () -> (gameContainer.getGame().pixelWidth - 256) / 2f,
-                () -> 0, () -> 256, () -> 64, "");
+        inGame_whoseTurn = new Label(main,
+                () -> 0,
+                () -> - main.guiSize / 2f, () -> 256, () -> 64, "");
     }
 
     public void update_inGame(double deltaTime) {

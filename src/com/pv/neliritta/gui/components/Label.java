@@ -1,16 +1,16 @@
 package com.pv.neliritta.gui.components;
 
 import com.pv.neliritta.FontManager;
+import com.pv.neliritta.Main;
 import com.pv.neliritta.constraints.Constraint;
 import com.pv.neliritta.gui.Action;
 import com.pv.neliritta.gui.Color;
 import com.pv.neliritta.gui.GameComponent;
-import com.ydgames.mxe.GameContainer;
 import processing.core.PConstants;
 import processing.core.PFont;
 
 public class Label implements GameComponent {
-    GameContainer gameContainer;
+    Main main;
 
     /* Boundaries of the button */
     public int x, y, width, height;
@@ -19,15 +19,15 @@ public class Label implements GameComponent {
     /* Appearance */
     public String text;
     public float textSize;
-    public Color backgroundColor = new Color(10, 10, 10);
-    public Color textColor = new Color(250, 250, 250);
+    public Color backgroundColor = new Color(255, 255, 255, 64);
+    public Color textColor = new Color(10, 10, 10, 160);
     public PFont font = FontManager.loadedFonts.get("button-font");
 
-    public Label(GameContainer gameContainer,
+    public Label(Main main,
                  Constraint xConstraint, Constraint yConstraint,
                  Constraint widthConstraint, Constraint heightConstraint,
                  String text) {
-        this.gameContainer = gameContainer;
+        this.main = main;
         this.xConstraint = xConstraint;
         this.yConstraint = yConstraint;
         this.widthConstraint = widthConstraint;
@@ -55,19 +55,19 @@ public class Label implements GameComponent {
 
         /* DECORATIONS */
 
-        gameContainer.getGame().fill(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
-        gameContainer.getGame().noStroke();
+        main.getGame().fill(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
+        main.getGame().noStroke();
 
-        gameContainer.getGame().rect(x, y, width, height);
+        main.getGame().rect(x, y, width, height);
 
         /* TEXT */
 
-        gameContainer.getGame().textFont(font, textSize);
-        gameContainer.getGame().fill(textColor.r, textColor.g, textColor.b, textColor.a);
-        gameContainer.getGame().noStroke();
+        main.getGame().textFont(font, textSize);
+        main.getGame().fill(textColor.r, textColor.g, textColor.b, textColor.a);
+        main.getGame().noStroke();
 
-        gameContainer.getGame().textAlign(PConstants.CENTER, PConstants.CENTER);
+        main.getGame().textAlign(PConstants.CENTER, PConstants.CENTER);
 
-        gameContainer.getGame().text(text, x + width / 2f, y + height / 2f);
+        main.getGame().text(text, x, y);
     }
 }
