@@ -1,0 +1,33 @@
+[TURN]
+    player1:                "Mängija 1"
+    player2:                "Mängija 2"
+    computer:               "Arvuti"
+
+    player1_won:            "Mängija 1 võitis"
+    player2_won:            "Mängija 2 võitis"
+    computer_won:           "Arvuti võitis"
+
+[MAIN MENU]
+    player_vs_player:       "Mängija vs mängija"
+    player_vs_computer:     "Mängija vs arvuti"
+    load_game:              "Ava mäng"
+    quit:                   "Lahku mängust"
+
+[MATCH OPTIONS]
+    columns:                "Veerge"
+    rows:                   "Ridu"
+
+    difficulty:             "Raskusaste"
+    easy:                   "Kerge"
+    normal:                 "Tavaline"
+
+    start:                  "Alusta"
+
+[IN GAME GUI]
+    pause:                  "Paus"
+
+[PAUSE MENU]
+    continue:               "Jätka"
+    new_game:               "Uus mäng"
+    save:                   "Salvesta mäng"
+    main_menu:              "Tagasi peamenüüsse"

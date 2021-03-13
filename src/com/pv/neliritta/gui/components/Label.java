@@ -3,13 +3,13 @@ package com.pv.neliritta.gui.components;
 import com.pv.neliritta.FontManager;
 import com.pv.neliritta.Main;
 import com.pv.neliritta.constraints.Constraint;
-import com.pv.neliritta.gui.Action;
 import com.pv.neliritta.gui.Color;
-import com.pv.neliritta.gui.GameComponent;
+import com.pv.neliritta.gui.Component;
+import com.pv.neliritta.localization.Localization;
 import processing.core.PConstants;
 import processing.core.PFont;
 
-public class Label implements GameComponent {
+public class Label implements Component {
     Main main;
 
     /* Boundaries of the button */
@@ -17,7 +17,7 @@ public class Label implements GameComponent {
     public Constraint xConstraint, yConstraint, widthConstraint, heightConstraint;
 
     /* Appearance */
-    public String text;
+    public Localization.Term text;
     public float textSize;
     public Color backgroundColor = new Color(255, 255, 255, 64);
     public Color textColor = new Color(10, 10, 10, 160);
@@ -26,7 +26,7 @@ public class Label implements GameComponent {
     public Label(Main main,
                  Constraint xConstraint, Constraint yConstraint,
                  Constraint widthConstraint, Constraint heightConstraint,
-                 String text) {
+                 Localization.Term text) {
         this.main = main;
         this.xConstraint = xConstraint;
         this.yConstraint = yConstraint;
@@ -53,13 +53,6 @@ public class Label implements GameComponent {
     @Override
     public void render() {
 
-        /* DECORATIONS */
-
-        main.getGame().fill(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
-        main.getGame().noStroke();
-
-        main.getGame().rect(x, y, width, height);
-
         /* TEXT */
 
         main.getGame().textFont(font, textSize);
@@ -68,6 +61,6 @@ public class Label implements GameComponent {
 
         main.getGame().textAlign(PConstants.CENTER, PConstants.CENTER);
 
-        main.getGame().text(text, x, y);
+        main.getGame().text(text.value, x, y);
     }
 }
