@@ -1,0 +1,30 @@
+[TURN]
+    player1:                "Player 1"
+    player2:                "Player 2"
+    computer:               "Computer"
+
+    player1_won:            "Player 1 won"
+    player2_won:            "Player 2 won"
+    computer_won:           "Computer won"
+
+[MAIN MENU]
+    player_vs_player:       "Player vs player"
+    player_vs_computer:     "Player vs computer"
+    load_game:              "Load game"
+    quit:                   "Quit game"
+
+[IN GAME GUI]
+    pause:                  "Pause"
+
+[PAUSE MENU]
+    continue:               "Continue"
+    new_game:               "New game"
+    save:                   "Save the game"
+    main_menu:              "Back to main menu"
+
+
+[GAMEPLAY SETTINGS]
+    rows:                   "Number of rows"
+    columns:                "Number of columns"
+
+    start:                  "Start"
