@@ -1,10 +1,12 @@
 package com.pv.neliritta.backend;
 
+import java.io.File;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 public class SaveManager {
 
@@ -19,7 +21,7 @@ public class SaveManager {
         // Tries to do its thing
         try {
             // Makes new output stream
-            objectOutputStream = new ObjectOutputStream(Files.newOutputStream(Paths.get(saveName)));
+            objectOutputStream = new ObjectOutputStream(Files.newOutputStream(Paths.get("save/" + saveName)));
             // Sends data to stream
             objectOutputStream.writeObject(save);
         // When done close stream
@@ -40,7 +42,7 @@ public class SaveManager {
         // Tries to do its thing
         try {
             // Makes new input stream
-            objectInputStream = new ObjectInputStream(Files.newInputStream(Paths.get(saveName)));
+            objectInputStream = new ObjectInputStream(Files.newInputStream(Paths.get("save/" + saveName)));
             // Reads data from stream and returns it
             return objectInputStream.readObject();
         // When done close stream
@@ -60,6 +62,7 @@ public class SaveManager {
         // Setting values
         save.board = backEnd.currentBoardState();
         save.whoseTurn = backEnd.getWhoseTurn();
+        save.difficulty = backEnd.getDifficulty();
         // Calling saveing method
         saveToFile(save, saveName);
     }
@@ -75,7 +78,7 @@ public class SaveManager {
             // Getting saveData from loading a save
             SaveData save = (SaveData) loadSaveFile(saveName);
             // Making new BackEnd with save data
-            return new BackEnd(save.board, save.whoseTurn);
+            return new BackEnd(save.board, save.whoseTurn, save.difficulty);
         } catch (Exception e) {
             /* TODO: Do something with error */
             // Logs Error To System logger
@@ -83,6 +86,15 @@ public class SaveManager {
         }
         // For safety reasons
         return null;
+    }
+
+    public static ArrayList<String> listSaves() {
+        File[] files = new File("save/").listFiles();
+        ArrayList<String> fileNames = new ArrayList<String>();
+        for (File file: files) {
+            fileNames.add(file.getName());
+        }
+        return fileNames;
     }
 
 

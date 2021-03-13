@@ -61,7 +61,7 @@ public class Board implements GameComponent {
         this.boardState = boardState;
         this.whoseTurn = whoseTurn;
 
-        this.backEnd = new BackEnd(boardState, whoseTurn);
+        this.backEnd = new BackEnd(boardState, whoseTurn, BackEnd.Difficulty.NORMAL);
     }
 
      @Override

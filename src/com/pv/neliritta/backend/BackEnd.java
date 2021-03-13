@@ -33,10 +33,11 @@ public class BackEnd {
     * 'whoseTurn' is either a '0' when no-one is winning (game is still going on) or
     * an ID of the player whose turn is at the moment (meaning (s)he hasn't done anything yet but is about to'.
     * */
-    public BackEnd(int[][] board, int whoseTurn) {
+    public BackEnd(int[][] board, int whoseTurn, Difficulty difficulty) {
         /* TODO */
         this.board = board;
         this.whoseTurn = whoseTurn;
+        this.difficulty = difficulty;
     }
 
     /*
@@ -46,7 +47,7 @@ public class BackEnd {
     private int[][] board;
     private int whoseTurn;
     // Difficulty just in case, default normal
-    private Difficulty difficulty = Difficulty.NORMAL;
+    private Difficulty difficulty;
     // Player 1 last move
     private int p1Column = 0;
 
@@ -62,6 +63,13 @@ public class BackEnd {
      * */
     public int getWhoseTurn() {
         return whoseTurn;
+    }
+
+    /*
+     * Returns the Difficulty.
+     * */
+    public Difficulty getDifficulty() {
+        return difficulty;
     }
 
     /*
@@ -199,13 +207,13 @@ public class BackEnd {
                         for (int j = 0; j < board.length - 2; j++) {
                             if (board[i][j] == 1 && board[i + 1][j] == 1 && board[i + 2][j] == 1) {
                                 if (!(j + 3 == board.length) && i - 1 >= 0) {
-                                    if (board[j + 3][i - 1] != 0) {
+                                    if (board[j + 3][i - 1] != 0 && onBoard(j+3, i)) {
                                         pNextX = j + 3;
                                         pNextY = i;
                                     }
                                 }
                                 if (j - 1 >= 0 && i - 1 >= 0) {
-                                    if (board[j - 1][i - 1] != 0) {
+                                    if (board[j - 1][i - 1] != 0 && onBoard(j-1, i)) {
                                         pNextX = j - 1;
                                         pNextY = i;
                                     }
@@ -217,13 +225,13 @@ public class BackEnd {
                         for (int j = 0; j < board[0].length - 2; j++) {
                             if (board[i][j] == 1 && board[i][j + 1] == 1 && board[i][j + 2] == 1) {
                                 if (!(j + 3 >= board[i].length)) {
-                                    if (board[i][j + 2] != 0) {
+                                    if (board[i][j + 2] != 0 && onBoard(i, j+3)) {
                                         pNextX = i;
                                         pNextY = j + 3;
                                     }
                                 }
                                 if (j - 1 >= 0) {
-                                    if (board[i][j - 1] != 0) {
+                                    if (board[i][j - 2] != 0 && onBoard(i, j-1)) {
                                         pNextX = i;
                                         pNextY = j - 1;
                                     }
@@ -235,13 +243,13 @@ public class BackEnd {
                         for (int j = 0; j < board[1].length - 2; j++) {
                             if (board[i][j] == 1 && board[i + 1][j + 1] == 1 && board[i + 2][j + 2] == 1) {
                                 if (i + 3 < board.length && j + 3 < board[i].length) {
-                                    if (board[i + 3][j + 2] != 0) {
+                                    if (board[i + 3][j + 2] != 0  && onBoard(i+3, j+3)) {
                                         pNextX = i + 3;
                                         pNextY = j + 3;
                                     }
                                 }
                                 if (i - 1 >= 0 && j - 1 >= 0) {
-                                    if (board[i - 1][j - 1] != 0) {
+                                    if (board[i - 1][j - 2] != 0  && onBoard(i-1, j-1)) {
                                         pNextX = i - 1;
                                         pNextY = j - 1;
                                     }
@@ -253,13 +261,13 @@ public class BackEnd {
                         for (int j = 0; j < board[1].length - 2; j++) {
                             if (board[i][j] == 1 && board[i - 1][j + 1] == 1 && board[i - 2][j + 2] == 1) {
                                 if (i - 1 >= 0 && j + 3 < board[i].length) {
-                                    if (board[i - 3][j + 2] != 0) {
+                                    if (board[i - 3][j + 2] != 0  && onBoard(i-3, j+3)) {
                                         pNextX = i - 3;
                                         pNextY = j + 3;
                                     }
                                 }
                                 if (i + 1 < board.length && j - 1 >= 0) {
-                                    if (board[i + 1][j - 2] != 0) {
+                                    if (board[i + 1][j - 2] != 0  && onBoard(i+1, j-1)) {
                                         pNextX = i + 1;
                                         pNextY = j - 1;
                                     }
@@ -274,10 +282,95 @@ public class BackEnd {
                     boolean result = executePlayerTurn(2, pNextX);
                     return result ? pNextX : -1;
                 } else {
-                    // Tee targemaks
-                    int column = new Random().nextInt(board.length);
-                    boolean result = executePlayerTurn(2, column);
-                    return result ? column : -1;
+                    int cNextX = -1, cNextY = -1;
+                    try {
+                        for (int i = 0; i < board[0].length; i++) {
+                            for (int j = 0; j < board.length - 2; j++) {
+                                if (board[i][j] == 1 && board[i + 1][j] == 1 && board[i + 2][j] == 1) {
+                                    if (!(j + 3 == board.length) && i - 1 >= 0) {
+                                        if (board[j + 3][i - 1] != 0 && onBoard(j+3, i)) {
+                                            cNextX = j + 3;
+                                            cNextY = i;
+                                        }
+                                    }
+                                    if (j - 1 >= 0 && i - 1 >= 0) {
+                                        if (board[j - 1][i - 1] != 0 && onBoard(j-1, i)) {
+                                            cNextX = j - 1;
+                                            cNextY = i;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        for (int i = 0; i < board.length; i++) {
+                            for (int j = 0; j < board[0].length - 2; j++) {
+                                if (board[i][j] == 2 && board[i][j + 1] == 2 && board[i][j + 2] == 2) {
+                                    if (!(j + 3 >= board[i].length)) {
+                                        if (board[i][j + 2] != 0 && onBoard(i, j+3)) {
+                                            cNextX = i;
+                                            cNextY = j + 3;
+                                        }
+                                    }
+                                    if (j - 1 >= 0) {
+                                        if (board[i][j - 1] != 0 && onBoard(i, j-1)) {
+                                            cNextX = i;
+                                            cNextY = j - 1;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        for (int i = 0; i < board.length - 2; i++) {
+                            for (int j = 0; j < board[1].length - 2; j++) {
+                                if (board[i][j] == 2 && board[i + 1][j + 1] == 2 && board[i + 2][j + 2] == 2) {
+                                    if (i + 3 < board.length && j + 3 < board[i].length) {
+                                        if (board[i + 3][j + 2] != 0 && onBoard(i+3, j+3)) {
+                                            cNextX = i + 3;
+                                            cNextY = j + 3;
+                                        }
+                                    }
+                                    if (i - 1 >= 0 && j - 1 >= 0) {
+                                        if (board[i - 1][j - 1] != 0 && onBoard(i-1, j-1)) {
+                                            cNextX = i - 1;
+                                            cNextY = j - 1;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        for (int i = 2; i < board.length - 2; i++) {
+                            for (int j = 0; j < board[1].length - 2; j++) {
+                                if (board[i][j] == 2 && board[i - 1][j + 1] == 2 && board[i - 2][j + 2] == 2) {
+                                    if (i - 1 >= 0 && j + 3 < board[i].length) {
+                                        if (board[i - 3][j + 2] != 0 && onBoard(i-3, j+3)) {
+                                            cNextX = i - 3;
+                                            cNextY = j + 3;
+                                        }
+                                    }
+                                    if (i + 1 < board.length && j - 1 >= 0) {
+                                        if (board[i + 1][j - 2] != 0 && onBoard(i+1, j-1)) {
+                                            cNextX = i + 1;
+                                            cNextY = j - 1;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    if (cNextX != -1 && cNextY != -1) {
+                        boolean result = executePlayerTurn(2, cNextX);
+                        return result ? cNextX : -1;
+                    } else {
+                        //TODO leia mingi varasem kuhu panna
+
+
+
+                        int column = new Random().nextInt(board.length);
+                        boolean result = executePlayerTurn(2, column);
+                        return result ? column : -1;
+                    }
                 }
             case EASY:
                 int column = new Random().nextInt(board.length);
@@ -299,6 +392,10 @@ public class BackEnd {
             }
         }
         return -1;
+    }
+
+    private boolean onBoard(int x, int y) {
+        return (x >= 0 && x < board.length && y >= 0 && y < board[0].length);
     }
 
     public enum Difficulty {
