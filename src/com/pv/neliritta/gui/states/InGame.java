@@ -19,11 +19,11 @@ public class InGame implements State {
     public void setup(GUI gui) {
         inGame_whoseTurn = new Label(gui.main,
                 () -> 0,
-                () -> + gui.main.guiSize / 2f + 128f, () -> 256, () -> 128, new Localization.Term(""));
+                () -> + gui.main.guiSize / 2f + 64f, () -> 256, () -> 128, new Localization.Term(""));
 
         inGame_pause = new Button(gui.main,
                 () -> 0,
-                () -> - gui.main.guiSize / 2f - 128f, () -> 256, () -> 64, Localization.reference("in game gui", "pause"),
+                () -> - gui.main.guiSize / 2f - 64f, () -> 256, () -> 64, Localization.reference("in game gui", "pause"),
                 () -> {
                     gui.state = GUI.State.IN_GAME_PAUSE_MENU;
                 });
