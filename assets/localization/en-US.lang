@@ -13,6 +13,16 @@
     load_game:              "Load game"
     quit:                   "Quit game"
 
+[MATCH OPTIONS]
+    columns:                "Columns"
+    rows:                   "Rows"
+
+    difficulty:             "Difficulty"
+    easy:                   "Easy"
+    normal:                 "Normal"
+
+    start:                  "Start"
+
 [IN GAME GUI]
     pause:                  "Pause"
 
@@ -21,10 +31,3 @@
     new_game:               "New game"
     save:                   "Save the game"
     main_menu:              "Back to main menu"
-
-
-[GAMEPLAY SETTINGS]
-    rows:                   "Number of rows"
-    columns:                "Number of columns"
-
-    start:                  "Start"

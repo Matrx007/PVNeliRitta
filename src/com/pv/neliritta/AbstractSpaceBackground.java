@@ -2,10 +2,8 @@ package com.pv.neliritta;
 
 import com.pv.neliritta.gui.Action;
 import com.pv.neliritta.gui.Color;
-import com.pv.neliritta.gui.GameComponent;
 import processing.core.PConstants;
 import processing.core.PImage;
-import processing.core.PMatrix;
 
 public class AbstractSpaceBackground {
     private static class Particle {
@@ -24,9 +22,9 @@ public class AbstractSpaceBackground {
             this.distance = distance;
 
             randomColor = new Color(
-                    160 + (int)(Math.random() * 160 - 80),
-                    160 + (int)(Math.random() * 160 - 80),
-                    160 + (int)(Math.random() * 160 - 80),
+                    160 + (int)(Math.random() * 40 - 20),
+                    160 + (int)(Math.random() * 40 - 20),
+                    160 + (int)(Math.random() * 40 - 20),
                     255
             );
 
@@ -77,14 +75,18 @@ public class AbstractSpaceBackground {
                 main.getGame().pixelHeight
         );
 
-        float centeredMouseX = main.getGame().mouseX - main.getGame().pixelWidth  / 2f;
-        float centeredMouseY = main.getGame().mouseY - main.getGame().pixelHeight / 2f;
+        float mappedMouseX = main.getGame().mouseX - main.getGame().pixelWidth  / 2f;
+        float mappedMouseY = main.getGame().mouseY - main.getGame().pixelHeight / 2f;
 
-        smoothMouseX += (centeredMouseX - smoothMouseX) * deltaTime * 10f;
-        smoothMouseY += (centeredMouseY - smoothMouseY) * deltaTime * 10f;
+        final float padding = 80f;
+        mappedMouseX = Math.max(Math.min(mappedMouseX, main.guiSize/2f - padding), -main.guiSize/2f + padding);
+        mappedMouseY = Math.max(Math.min(mappedMouseY, main.guiSize/2f - padding), -main.guiSize/2f + padding);
 
-        cameraRotationX = -smoothMouseY  / shortestDimension * 2f;
-        cameraRotationY = smoothMouseX / shortestDimension * 2f;
+        smoothMouseX += (mappedMouseX - smoothMouseX) * deltaTime * 10f;
+        smoothMouseY += (mappedMouseY - smoothMouseY) * deltaTime * 10f;
+
+        cameraRotationX = -smoothMouseY  / shortestDimension * 2f / 7f;
+        cameraRotationY = smoothMouseX / shortestDimension * 2f / 7f;
 
 //        cameraRotationX = -centeredMouseY / shortestDimension * 2f;
 //        cameraRotationY = centeredMouseX / shortestDimension * 2f;
@@ -146,9 +148,9 @@ public class AbstractSpaceBackground {
                     particles[i].randomColor.r,
                     particles[i].randomColor.g,
                     particles[i].randomColor.b,
-                    64
+                    16
             );
-            main.getGame().scale(3f);
+            main.getGame().scale(9f);
             main.getGame().image(particleImage, 0, 0);
             main.getGame().noTint();
             /*main.getGame().fill(
@@ -178,6 +180,7 @@ public class AbstractSpaceBackground {
         main.getGame().pushMatrix();
         main.getGame().blendMode(PConstants.NORMAL);
         renderGUI.run();
+
         main.getGame().popMatrix();
         main.getGame().popStyle();
         main.getGame().translate(0, 0, -guiOffsetZ);
@@ -190,7 +193,23 @@ public class AbstractSpaceBackground {
 
         main.getGame().blendMode(PConstants.NORMAL);
 
+
+        main.getGame().translate(
+                main.getGame().pixelWidth / 2f,
+                main.getGame().pixelHeight / 2f
+        );
+
+        main.getGame().imageMode(PConstants.CENTER);
+        main.getGame().noTint();
+        main.getGame().translate(0, 0, guiOffsetZ+main.guiSize*0.6f);
+        main.getGame().image(GraphicsManager.loadedGraphics.get("border"), 0, 0,
+                main.getGame().pixelWidth*1.5f, main.getGame().pixelHeight*1.5f);
+        main.getGame().translate(0, 0, -(guiOffsetZ+main.guiSize*0.6f));
+
         main.getGame().popMatrix();
+        main.getGame().imageMode(PConstants.CORNER);
+        main.getGame().image(GraphicsManager.loadedGraphics.get("vignette"), 0, 0,
+                main.getGame().pixelWidth, main.getGame().pixelHeight);
 
     }
 }

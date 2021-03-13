@@ -1,16 +1,18 @@
 package com.pv.neliritta.gui.components;
 
+import com.pv.neliritta.GraphicsManager;
 import com.pv.neliritta.Utilities;
 import com.pv.neliritta.FontManager;
 import com.pv.neliritta.Main;
 import com.pv.neliritta.constraints.Constraint;
-import com.pv.neliritta.gui.GameComponent;
+import com.pv.neliritta.gui.Component;
 import com.pv.neliritta.gui.Action;
 import com.pv.neliritta.gui.Color;
+import com.pv.neliritta.localization.Localization;
 import processing.core.PConstants;
 import processing.core.PFont;
 
-public class Button implements GameComponent {
+public class Button implements Component {
     Main main;
 
     /* Boundaries of the button */
@@ -20,15 +22,11 @@ public class Button implements GameComponent {
     private float realTopLeftX, realTopLeftY, realBottomRightX, realBottomRightY;
 
     /* Appearance */
-    public String text;
+    public Localization.Term text;
     public float textSize;
-    public Color backgroundColor = new Color(10, 10, 10);
-    public Color textColor = new Color(250, 250, 250);
+    public Color backgroundColor = new Color(0xFF, 0xFF, 0xFF);
+    public Color textColor = new Color(0x53, 0x4a, 0x75);
     public PFont font = FontManager.loadedFonts.get("button-font");
-
-    /* Animations */
-    private float offsetX, offsetAnimationSpeed;
-    private static final float OFFSET_ANIMATION_ACCELERATION = 1600f;
 
     /* State */
     public boolean isMouseOver;
@@ -40,7 +38,8 @@ public class Button implements GameComponent {
     public Button(Main main,
                   Constraint xConstraint, Constraint yConstraint,
                   Constraint widthConstraint, Constraint heightConstraint,
-                  String text, Action onClick) {
+                  Localization.Term text, Action onClick) {
+
         this.main = main;
         this.xConstraint = xConstraint;
         this.yConstraint = yConstraint;
@@ -48,8 +47,6 @@ public class Button implements GameComponent {
         this.heightConstraint = heightConstraint;
         this.text = text;
         this.onClick = onClick;
-
-        this.offsetX = 0;
     }
 
     @Override
@@ -59,7 +56,7 @@ public class Button implements GameComponent {
         width = (int)widthConstraint.calculate();
         height = (int)heightConstraint.calculate();
 
-        this.textSize = height * 0.4f;
+        this.textSize = height * 0.5f;
     }
 
     @Override
@@ -93,71 +90,19 @@ public class Button implements GameComponent {
                 onClick.run();
             }
         }
-
-        /* If mouse inside the button at the moment
-        if(main.getGame().mouseX > (x - width / 2f) &&
-                main.getGame().mouseY > (y - height / 2f) &&
-                main.getGame().mouseX < (x + width / 2f) &&
-                main.getGame().mouseY < (y + height / 2f)) {
-            isMouseOver = true;
-
-             If mouse is being pressed while it's inside the button
-            if(main.getGame().input.isButton(PConstants.LEFT)) {
-                isMouseDown = true;
-            }
-
-             If mouse was released while it was inside the button, trigger the 'onClick' function
-            if(main.getGame().input.isButtonUp(PConstants.LEFT)) {
-                onClick.run();
-            }
-        }*/
-
-        if(isMouseOver) {
-            if(offsetX >= 16+8) {
-                offsetX = 16+8;
-                offsetAnimationSpeed = 0;
-            } else {
-                offsetAnimationSpeed += OFFSET_ANIMATION_ACCELERATION * deltaTime;
-                offsetX += offsetAnimationSpeed * deltaTime;
-            }
-        } else {
-            if(offsetX <= 0) {
-                offsetX = 0;
-                offsetAnimationSpeed = 0;
-            } else {
-                offsetAnimationSpeed += OFFSET_ANIMATION_ACCELERATION * deltaTime;
-                offsetX -= offsetAnimationSpeed * deltaTime;
-            }
-        }
     }
 
     @Override
     public void render() {
 
-        /* DECORATIONS */
+        main.getGame().imageMode(PConstants.CENTER);
 
-        main.getGame().fill(textColor.r, textColor.g, textColor.b, textColor.a);
-        main.getGame().noStroke();
-
-        main.getGame().rect(x - width/2f + 8, y, 16, height);
-
-        /* BACKGROUND */
-
-        if(isMouseDown) {
-            main.getGame().fill(textColor.r, textColor.g, textColor.b, textColor.a);
-        } else {
-            main.getGame().fill(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
-        }
-
-        main.getGame().noStroke();
-
-        main.getGame().rect(x + offsetX, y, width, height);
-
-        /* TEXT */
+        if(isMouseOver) main.getGame().image(GraphicsManager.loadedGraphics.get("button-hover"), x, y, width*1.11f, height*1.43f);
+        else            main.getGame().image(GraphicsManager.loadedGraphics.get("button"), x, y, width*1.11f, height*1.43f);
 
 
         main.getGame().textFont(font, textSize);
-        if(isMouseDown) {
+        if(isMouseOver) {
             main.getGame().fill(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
         } else {
             main.getGame().fill(textColor.r, textColor.g, textColor.b, textColor.a);
@@ -166,7 +111,7 @@ public class Button implements GameComponent {
 
         main.getGame().textAlign(PConstants.CENTER, PConstants.CENTER);
 
-        main.getGame().text(text, x + offsetX, y);
+        main.getGame().text(text.value, x, y);
 
         /* CALCULATE REAL COORDINATES */
         realTopLeftX = main.getGame().screenX(x - width / 2f, y - height / 2f);
