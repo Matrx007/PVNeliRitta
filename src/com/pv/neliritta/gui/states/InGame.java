@@ -8,7 +8,7 @@ import com.pv.neliritta.localization.Localization;
 
 public class InGame implements State {
     /* Game board, will be modified by 'BackEnd' */
-    public Board board;
+    public Board board = null;
 
     Label inGame_whoseTurn;
 
@@ -61,7 +61,7 @@ public class InGame implements State {
     }
 
     public void resize() {
-        board.resize();
+        if(board != null) board.resize();
 
         inGame_whoseTurn.resize();
         inGame_pause.resize();

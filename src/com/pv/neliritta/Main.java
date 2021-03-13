@@ -68,7 +68,6 @@ public class Main extends GameContainer {
 
         /* ### GAME STRUCTURE ### */
         gui = new GUI(this);
-        gui.inGame.board = new Board(this, 5, 10);
 
         gui.setup();
     }

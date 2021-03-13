@@ -1,6 +1,7 @@
 package com.pv.neliritta.gui.states;
 
 import com.pv.neliritta.GUI;
+import com.pv.neliritta.backend.BackEnd;
 import com.pv.neliritta.gui.Component;
 import com.pv.neliritta.gui.components.Button;
 import com.pv.neliritta.gui.components.Input;
@@ -92,15 +93,27 @@ public class MatchOptions implements State {
                 () -> {
                     String columnsString = ((Input)fields.get("columns")).getInput();
                     String rowsString = ((Input)fields.get("rows")).getInput();
+                    BackEnd.Difficulty difficulty;
 
                     if(columnsString.length() == 0 && rowsString.length() == 0) {
                         return;
                     }
 
+                    switch (((Options)fields.get("difficulty")).getSelected().key) {
+                        case "easy":
+                            difficulty = BackEnd.Difficulty.EASY;
+                            break;
+                        case "normal":
+                            difficulty = BackEnd.Difficulty.NORMAL;
+                            break;
+                        default:
+                            return;
+                    }
+
                     gui.inGame.board = new Board(gui.main,
                             Integer.parseInt(columnsString),
-                            Integer.parseInt(rowsString)
-                            // TODO: Create a new instance of a board with the chosen difficulty
+                            Integer.parseInt(rowsString),
+                            difficulty
                     );
                     gui.inGame.board.againstComputer = gui.inGame.againstComputer;
 

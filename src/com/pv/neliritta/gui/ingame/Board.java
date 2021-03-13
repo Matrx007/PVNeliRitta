@@ -32,6 +32,7 @@ public class Board implements Component {
     private float computerThinkingTime = 0;
 
     private BackEnd backEnd;
+    private BackEnd.Difficulty difficulty;
 
     /* Appearance */
     public Color background = new Color(88, 88, 88);
@@ -50,10 +51,11 @@ public class Board implements Component {
     float width, height, padding, topLeftX, topLeftY, bottomRightX, bottomRightY, holeSpacing;
     float boardStartX, boardStartY, totalWidth, totalHeight;
 
-    public Board(Main main, int boardWidth, int boardHeight) {
+    public Board(Main main, int boardWidth, int boardHeight, BackEnd.Difficulty difficulty) {
         this.main = main;
         this.boardWidth = boardWidth;
         this.boardHeight = boardHeight;
+        this.difficulty = difficulty;
 
         slotImage = GraphicsManager.loadedGraphics.get("slot");
 
@@ -61,18 +63,17 @@ public class Board implements Component {
 
         resize();
 
-        System.out.println("New board initialized, properties: ");
-        System.out.println("boardWidth = " + boardWidth);
-        System.out.println("boardHeight = " + boardHeight);
+        System.out.println("Using difficulty: "+difficulty.toString());
     }
 
-    public Board(Main main, int[][] boardState, int whoseTurn, boolean againstComputer) {
+    public Board(Main main, int[][] boardState, int whoseTurn, boolean againstComputer, BackEnd.Difficulty difficulty) {
         this.main = main;
         this.boardState = boardState;
         this.whoseTurn = whoseTurn;
         this.againstComputer = againstComputer;
+        this.difficulty = difficulty;
 
-        this.backEnd = new BackEnd(boardState, whoseTurn);
+        this.backEnd = new BackEnd(boardState, whoseTurn, difficulty);
 
         resize();
     }
@@ -80,7 +81,7 @@ public class Board implements Component {
     public void init() {
         boardState = new int[boardWidth][boardHeight];
 
-        this.backEnd = new BackEnd(boardWidth, boardHeight);
+        this.backEnd = new BackEnd(boardWidth, boardHeight, difficulty);
 
         whoseTurn = 1;
         whoWon = 0;
@@ -136,8 +137,6 @@ public class Board implements Component {
                             // Spawn the ball dropping animation
                             ballAnimations.push(new BallAnimation(mouseOverColumn, (boardHeight) - firstFreeSlot, player1Color,
                                     () -> {}));
-
-                            System.out.println("pushing animation: {" + mouseOverColumn + ", " + ((boardHeight) - firstFreeSlot) + "}, " + player1Color);
                         }
                     }
                 } else {
@@ -159,8 +158,6 @@ public class Board implements Component {
                         // Spawn the ball animation
                         ballAnimations.push(new BallAnimation(mouseOverColumn, (boardHeight) - firstFreeSlot, whoseTurn == 1 ? player2Color : player1Color,
                                 () -> {}));
-
-                        System.out.println("pushing animation: {" + mouseOverColumn + ", " + ((boardHeight) - firstFreeSlot) + "}, " + (whoseTurn == 1 ? player2Color : player1Color));
                     }
                 }
             }

@@ -41,6 +41,8 @@ public class Options implements Component {
     private Localization.Term[] options = null;
     private int selectedID = 0;
 
+    public Localization.Term getSelected() { return options[selectedID]; }
+
     public Options(Main main,
                   Constraint xConstraint, Constraint yConstraint,
                   Constraint widthConstraint, Constraint heightConstraint,

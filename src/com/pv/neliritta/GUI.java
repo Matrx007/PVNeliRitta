@@ -26,7 +26,7 @@ public class GUI implements Component {
         IN_GAME,
         IN_GAME_PAUSE_MENU
     }
-    public State state = State.MATCH_OPTIONS;
+    public State state = State.MAIN_MENU;
 
     /* Game states */
     public MainMenu mainMenu = new MainMenu();

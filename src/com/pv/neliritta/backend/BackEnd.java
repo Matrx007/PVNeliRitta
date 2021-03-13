@@ -20,9 +20,10 @@ public class BackEnd {
     * 'boardWidth' and 'boardHeight' should be used to initialize the game
     * board (aka 'private int[][] board').
     * */
-    public BackEnd(int boardWidth, int boardHeight) {
+    public BackEnd(int boardWidth, int boardHeight, Difficulty difficulty) {
         // Initializes board
         this.board = new int[boardWidth][boardHeight];
+        this.difficulty = difficulty;
     }
 
     /*
