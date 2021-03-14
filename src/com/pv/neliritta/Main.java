@@ -35,11 +35,8 @@ public class Main extends GameContainer {
     @Override
     public void setup() {
         // Create "save" folder if it doesn't exist yet
-        try {
-            //noinspection ResultOfMethodCallIgnored
-            new File("/save/").createNewFile();
-        } catch (IOException ignored) {
-        }
+        //noinspection ResultOfMethodCallIgnored
+        new File("./save").mkdir();
 
         /* ### LOAD FONTS ### */
         FontManager.loadFont(this, "button-font", "assets/fonts/AnnieUseYourTelescope-Regular.ttf", 64f);
