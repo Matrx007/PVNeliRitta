@@ -194,27 +194,27 @@ public class BackEnd {
     *  -1 should only be used when an error occurred.
     * */
     public int executeComputerTurn() {
+        System.out.println("Computer");
         /* TODO */
         switch (difficulty) {
             case NORMAL:
-                State moveState = State.P_LAST;
                 int pLastX, pLastY;
                 pLastX = p1Column;
                 pLastY = possibleHighest(pLastX) == board[0].length - 1 ? possibleHighest(pLastX) : board.length - 1;
-                moveState = State.P_NEXT;
                 int pNextX = -1, pNextY = -1;
                 try {
+                    // Checks if player has 3 in row, next 71 lines of code
                     for (int i = 0; i < board[0].length; i++) {
                         for (int j = 0; j < board.length - 2; j++) {
                             if (board[i][j] == 1 && board[i + 1][j] == 1 && board[i + 2][j] == 1) {
                                 if (!(j + 3 == board.length) && i - 1 >= 0) {
-                                    if (board[j + 3][i - 1] != 0 && onBoard(j+3, i)) {
+                                    if ((i == 0 || board[j + 3][i - 1] != 0) && onBoard(j+3, i)) {
                                         pNextX = j + 3;
                                         pNextY = i;
                                     }
                                 }
                                 if (j - 1 >= 0 && i - 1 >= 0) {
-                                    if (board[j - 1][i - 1] != 0 && onBoard(j-1, i)) {
+                                    if ((i == 0 || board[j - 1][i - 1] != 0) && onBoard(j-1, i)) {
                                         pNextX = j - 1;
                                         pNextY = i;
                                     }
@@ -279,23 +279,25 @@ public class BackEnd {
                 } catch (ArrayIndexOutOfBoundsException e) {
                     System.out.println(e.getMessage());
                 }
-                if (pNextX != -1 && pNextY != -1) {
+                if (pNextX != -1 && pNextY != -1) { // If player had that then computer puts its thing there
                     boolean result = executePlayerTurn(2, pNextX);
+                    // Returns result of the placement
                     return result ? pNextX : -1;
                 } else {
                     int cNextX = -1, cNextY = -1;
                     try {
+                        // Checks if Computer has 3 in row and could win
                         for (int i = 0; i < board[0].length; i++) {
                             for (int j = 0; j < board.length - 2; j++) {
                                 if (board[i][j] == 1 && board[i + 1][j] == 1 && board[i + 2][j] == 1) {
                                     if (!(j + 3 == board.length) && i - 1 >= 0) {
-                                        if (board[j + 3][i - 1] != 0 && onBoard(j+3, i)) {
+                                        if ((i == 0 || board[j + 3][i - 1] != 0) && onBoard(j+3, i)) {
                                             cNextX = j + 3;
                                             cNextY = i;
                                         }
                                     }
                                     if (j - 1 >= 0 && i - 1 >= 0) {
-                                        if (board[j - 1][i - 1] != 0 && onBoard(j-1, i)) {
+                                        if ((i == 0 || board[j - 1][i - 1] != 0) && onBoard(j-1, i)) {
                                             cNextX = j - 1;
                                             cNextY = i;
                                         }
@@ -364,13 +366,55 @@ public class BackEnd {
                         boolean result = executePlayerTurn(2, cNextX);
                         return result ? cNextX : -1;
                     } else {
-                        //TODO leia mingi varasem kuhu panna
-
-
-
-                        int column = new Random().nextInt(board.length);
-                        boolean result = executePlayerTurn(2, column);
-                        return result ? column : -1;
+                        int nextX = -1;
+                        for (int i = 0; i < board.length; i++) {
+                            for (int j = 0; j < board[0].length; j++) {
+                                if (board[i][j] == 2) {
+                                    if (onBoard(i, j + 1) && onBoard(i, j)) {
+                                        if (board[i][j+1] == 0) {
+                                            nextX = i;
+                                        }
+                                    }
+                                    if (onBoard(i+1, j) && onBoard(i+1, j-1)) {
+                                        if (board[i+1][j-1] != 0 && board[i+1][j] == 0) {
+                                            nextX = i+1;
+                                        }
+                                    }
+                                    if (onBoard(i-1, j) && onBoard(i-1, j-1)) {
+                                        if (board[i-1][j-1] != 0 && board[i-1][j] == 0) {
+                                            nextX = i-1;
+                                        }
+                                    }
+                                    if (onBoard(i+1, j+1) && onBoard(i+1, j)) {
+                                        if (board[i+1][j] != 0 && board[i+1][j+1] == 0) {
+                                            nextX = i+1;
+                                        }
+                                    }
+                                    if (onBoard(i+1, j-1) && onBoard(i+1, j-2)) {
+                                        if (board[i+1][j-2] != 0 && board[i+1][j-1] == 0) {
+                                            nextX = i+1;
+                                        }
+                                    }
+                                    if (onBoard(i-1, j+1) && onBoard(i+1, j)) {
+                                        if (board[i-1][j] != 0 && board[i-1][j+1] == 0) {
+                                            nextX = i-1;
+                                        }
+                                    }
+                                    if (onBoard(i-1, j-1) && onBoard(i-1, j-2)) {
+                                        if (board[i-1][j-2] != 0 && board[i-1][j-1] == 0) {
+                                            nextX = i-1;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (nextX != -1 && onBoard(nextX, 1)) {
+                            return executePlayerTurn(2, nextX) ? nextX : -1;
+                        } else {
+                            int column = new Random().nextInt(board.length);
+                            boolean result = executePlayerTurn(2, column);
+                            return result ? column : -1;
+                        }
                     }
                 }
             case EASY:
@@ -401,9 +445,5 @@ public class BackEnd {
 
     public enum Difficulty {
         EASY, NORMAL, HARD
-    }
-
-    private enum State {
-        P_LAST, P_NEXT, AI_BEST, AI_CHECK
     }
 }
