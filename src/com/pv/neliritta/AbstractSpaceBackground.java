@@ -1,10 +1,14 @@
 package com.pv.neliritta;
+// Written by Rainis Randmaa
 
 import com.pv.neliritta.gui.Action;
 import com.pv.neliritta.gui.Color;
 import processing.core.PConstants;
 import processing.core.PImage;
 
+/*
+* Displays abstract background behind the gameplay. Makes the gui in 3D too.
+* */
 public class AbstractSpaceBackground {
     private static class Particle {
         float rotationX, rotationY, rotationZ;
@@ -70,14 +74,11 @@ public class AbstractSpaceBackground {
     }
 
     public void update(double deltaTime) {
-        float shortestDimension = Math.min(
-                main.getGame().pixelWidth,
-                main.getGame().pixelHeight
-        );
-
+        // Mouse coordinates mapped from [0, windowSize] to [-0.5 * windowsSize, 0.5 * windowSize]
         float mappedMouseX = main.getGame().mouseX - main.getGame().pixelWidth  / 2f;
         float mappedMouseY = main.getGame().mouseY - main.getGame().pixelHeight / 2f;
 
+        // Limit camera rotation so that the border/vignette always covers the entire screen
         final float padding = 80f;
         mappedMouseX = Math.max(Math.min(mappedMouseX, main.guiSize/2f - padding), -main.guiSize/2f + padding);
         mappedMouseY = Math.max(Math.min(mappedMouseY, main.guiSize/2f - padding), -main.guiSize/2f + padding);
@@ -85,15 +86,8 @@ public class AbstractSpaceBackground {
         smoothMouseX += (mappedMouseX - smoothMouseX) * deltaTime * 10f;
         smoothMouseY += (mappedMouseY - smoothMouseY) * deltaTime * 10f;
 
-        cameraRotationX = -smoothMouseY  / shortestDimension * 2f / 7f;
-        cameraRotationY = smoothMouseX / shortestDimension * 2f / 7f;
-
-//        cameraRotationX = -centeredMouseY / shortestDimension * 2f;
-//        cameraRotationY = centeredMouseX / shortestDimension * 2f;
-
-        /*rotationX += deltaTime * 0.1f;
-        rotationY += deltaTime * 0.1f;
-        rotationZ += deltaTime * 0.1f;*/
+        cameraRotationX = -smoothMouseY  / main.guiSize * 2f / 7f;
+        cameraRotationY = smoothMouseX / main.guiSize * 2f / 7f;
 
 
         for(int i = 0; i < particles.length; i++) {

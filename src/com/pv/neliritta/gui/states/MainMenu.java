@@ -1,4 +1,5 @@
 package com.pv.neliritta.gui.states;
+// Written by Rainis Randmaa
 
 import com.pv.neliritta.GUI;
 import com.pv.neliritta.gui.components.Button;
@@ -44,7 +45,10 @@ public class MainMenu implements State {
         mainMenu_buttons.put("loadGame", new Button(gui.main,
                 () -> 0,
                 () -> (buttonHeight + buttonSpacing) * 0,
-                () -> buttonWidth, () -> buttonHeight,  Localization.reference("main menu", "load_game"), () -> {}));
+                () -> buttonWidth, () -> buttonHeight,  Localization.reference("main menu", "load_game"),
+                () -> {
+                    gui.state = GUI.State.LOAD_GAME;
+                }));
 
         mainMenu_buttons.put("quit", new Button(gui.main,
                 () -> 0,

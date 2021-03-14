@@ -1,4 +1,5 @@
 package com.pv.neliritta.gui.components;
+// Written by Rainis Randmaa
 
 import com.pv.neliritta.FontManager;
 import com.pv.neliritta.GraphicsManager;
@@ -12,6 +13,9 @@ import com.pv.neliritta.localization.Localization;
 import processing.core.PConstants;
 import processing.core.PFont;
 
+/*
+* Used to get user preference. User can cycle through options with left and right arrow.
+* */
 public class Options implements Component {
 
     Main main;

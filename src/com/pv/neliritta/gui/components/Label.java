@@ -1,4 +1,5 @@
 package com.pv.neliritta.gui.components;
+// Written by Rainis Randmaa
 
 import com.pv.neliritta.FontManager;
 import com.pv.neliritta.Main;
@@ -9,6 +10,9 @@ import com.pv.neliritta.localization.Localization;
 import processing.core.PConstants;
 import processing.core.PFont;
 
+/*
+* Displays text. Nothing else, no callbacks, no animations, just text.
+* */
 public class Label implements Component {
     Main main;
 

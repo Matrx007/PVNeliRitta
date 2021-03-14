@@ -8,6 +8,11 @@ import com.ydgames.mxe.GameContainer;
 import processing.core.PConstants;
 import processing.core.PImage;
 
+import java.io.File;
+import java.io.IOException;
+
+import static jogamp.common.os.elf.SectionArmAttributes.Tag.File;
+
 // MX Engine is a custom (mostly) 2D game engine which is built on top of the Processing framework.
 // It provides better way to handle user input and an object management system (which I will not be using in this project)
 public class Main extends GameContainer {
@@ -33,6 +38,12 @@ public class Main extends GameContainer {
 
     @Override
     public void setup() {
+        // Create "save" folder if it doesn't exist yet
+        try {
+            new File("/save/").createNewFile();
+        } catch (IOException ignored) {
+        }
+
         /* ### LOAD FONTS ### */
         FontManager.loadFont(this, "button-font", "assets/fonts/AnnieUseYourTelescope-Regular.ttf", 64f);
 
@@ -72,13 +83,14 @@ public class Main extends GameContainer {
         gui.setup();
     }
 
-    /* For detecting window resize */
+    // For detecting window resize
     int prevPixelWidth, prevPixelHeight;
 
     @Override
     public void update(double deltaTime) {
         background.update(deltaTime);
 
+        // If window resized, recalculate GUI and it's components
         if(getGame().pixelWidth != prevPixelWidth ||
                 getGame().pixelHeight != prevPixelHeight) {
             guiSize = Math.min(getGame().pixelWidth, getGame().pixelHeight);
@@ -89,21 +101,18 @@ public class Main extends GameContainer {
             prevPixelHeight = getGame().pixelHeight;
         }
 
+        // Update all gui components
         gui.update(deltaTime);
     }
 
+    // Game accent color: 0x534a75
+
     @Override
     public void render() {
-//        getGame().background(93, 177, 179);
-//        getGame().background(0x534a75);
-//        getGame().background(0xcb);
-//        getGame().background(230, 196, 110);
-//        getGame().background(204, 208, 222);
         getGame().background(230);
 
+        // Render 3D background and gui
         background.render(() -> gui.render());
-
-//        gui.render();
     }
 
 

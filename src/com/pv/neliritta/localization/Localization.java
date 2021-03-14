@@ -1,16 +1,14 @@
 package com.pv.neliritta.localization;
-
-import com.pv.neliritta.gui.Action;
+// Written by Rainis Randmaa
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Locale;
 
 public class Localization {
 
-
+    // Used to auto-update references. Can also be used as a simple String when necessary.
     public static class Term {
         public final String group, key;
         public String value;
@@ -26,6 +24,15 @@ public class Localization {
             this.key = null;
 
             this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return "Term{" +
+                value + " in " +
+                group + " @ " +
+                key +
+            "}";
         }
     }
 

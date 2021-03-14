@@ -1,4 +1,5 @@
 package com.pv.neliritta.gui.states;
+// Written by Rainis Randmaa
 
 import com.pv.neliritta.GUI;
 import com.pv.neliritta.gui.components.Button;

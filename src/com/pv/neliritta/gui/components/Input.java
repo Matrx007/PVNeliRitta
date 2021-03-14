@@ -1,4 +1,5 @@
 package com.pv.neliritta.gui.components;
+// Written by Rainis Randmaa
 
 import com.pv.neliritta.FontManager;
 import com.pv.neliritta.GraphicsManager;
@@ -16,6 +17,9 @@ import java.awt.event.KeyEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/*
+* Used to get user input. Can be customized to only allow numbers, dates or binary and etc.
+* */
 public class Input implements Component {
     Main main;
 

@@ -1,4 +1,5 @@
 package com.pv.neliritta.gui.ingame;
+// Written by Rainis Randmaa
 
 import com.pv.neliritta.Utilities;
 import com.pv.neliritta.GraphicsManager;
@@ -77,6 +78,14 @@ public class Board implements Component {
 
         resize();
     }
+
+//    public Board(Main main, BackEnd newBackEnd) {
+//        this.main = main;
+//
+//        this.boardState = newBackEnd.currentBoardState();
+//        this.whoseTurn = newBackEnd.getWhoseTurn();
+//        this.againstComputer = newBackEnd.ge
+//    }
 
     public void init() {
         boardState = new int[boardWidth][boardHeight];

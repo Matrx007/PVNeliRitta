@@ -23,6 +23,11 @@
 
     start:                  "Start"
 
+[LOAD GAME]
+    refresh:                "Refresh"
+    load:                   "Load"
+    main_menu:              "Back to main menu"
+
 [IN GAME GUI]
     pause:                  "Pause"
 

@@ -1,4 +1,5 @@
 package com.pv.neliritta.gui.states;
+// Written by Rainis Randmaa
 
 import com.pv.neliritta.GUI;
 import com.pv.neliritta.backend.BackEnd;
@@ -14,65 +15,63 @@ import java.util.HashMap;
 import java.util.regex.Pattern;
 
 public class MatchOptions implements State {
-    HashMap<String, Component> fields;
+    HashMap<String, Component> components;
 
     @Override
     public void setup(GUI gui) {
 
         /* ### CREATE UI #### */
 
-        fields = new HashMap<>();
-
-        int numFields = 4;
+        components = new HashMap<>();
 
         float fieldWidth = 384;
         float fieldHeight = 64;
         float fieldSpacing = 16;
 
-        fields.put("rows_label", new Label(gui.main,
+        components.put("rows_label", new Label(gui.main,
                 () -> 0,
                 () -> (fieldHeight + fieldSpacing) * -4,
                 () -> fieldWidth, () -> fieldHeight,
                 Localization.reference("match options", "rows")
         ));
 
-        fields.put("rows", new Input(gui.main,
+        components.put("rows", new Input(gui.main,
                 () -> 0,
                 () -> (fieldHeight + fieldSpacing) * -3,
                 () -> fieldWidth, () -> fieldHeight,
                 Localization.reference("match options", "rows"),
                 Pattern.compile("[0-9]+"), Input.CHARACTER_PATTERN_NUMBERS,
                 () -> {
-                    System.out.println("Rows: "+((Input)fields.get("rows")).getInput());
+                    System.out.println("Rows: "+((Input) components.get("rows")).getInput());
                 }
         ));
 
-        fields.put("columns_label", new Label(gui.main,
+        components.put("columns_label", new Label(gui.main,
                 () -> 0,
                 () -> (fieldHeight + fieldSpacing) * -2,
                 () -> fieldWidth, () -> fieldHeight,
                 Localization.reference("match options", "columns")
         ));
 
-        fields.put("columns", new Input(gui.main,
+        components.put("columns", new Input(gui.main,
                 () -> 0,
                 () -> (fieldHeight + fieldSpacing) * -1,
                 () -> fieldWidth, () -> fieldHeight,
                 Localization.reference("match options", "columns"),
                 Pattern.compile("[0-9]+"), Input.CHARACTER_PATTERN_NUMBERS,
                 () -> {
-                    System.out.println("Columns: "+((Input)fields.get("columns")).getInput());
+                    System.out.println("Columns: "+((Input) components.get("columns")).getInput());
                 }
         ));
 
-        fields.put("difficulty_label", new Label(gui.main,
+        components.put("difficulty_label", new Label(gui.main,
                 () -> 0,
                 () -> (fieldHeight + fieldSpacing) * 0,
                 () -> fieldWidth, () -> fieldHeight,
                 Localization.reference("match options", "difficulty")
         ));
 
-        fields.put("difficulty", new Options(gui.main,
+        components.put("difficulty", new Options(gui.main,
                 () -> 0,
                 () -> (fieldHeight + fieldSpacing) * 1,
                 () -> fieldWidth, () -> fieldHeight,
@@ -85,21 +84,21 @@ public class MatchOptions implements State {
                 }
         ));
 
-        fields.put("start", new Button(gui.main,
+        components.put("start", new Button(gui.main,
                 () -> 0,
                 () -> (fieldHeight + fieldSpacing) * 4,
                 () -> fieldWidth, () -> fieldHeight,
                 Localization.reference("match options", "start"),
                 () -> {
-                    String columnsString = ((Input)fields.get("columns")).getInput();
-                    String rowsString = ((Input)fields.get("rows")).getInput();
+                    String columnsString = ((Input) components.get("columns")).getInput();
+                    String rowsString = ((Input) components.get("rows")).getInput();
                     BackEnd.Difficulty difficulty;
 
                     if(columnsString.length() == 0 && rowsString.length() == 0) {
                         return;
                     }
 
-                    switch (((Options)fields.get("difficulty")).getSelected().key) {
+                    switch (((Options) components.get("difficulty")).getSelected().key) {
                         case "easy":
                             difficulty = BackEnd.Difficulty.EASY;
                             break;
@@ -124,21 +123,21 @@ public class MatchOptions implements State {
 
     @Override
     public void update(GUI gui, double deltaTime) {
-        for(Component component : fields.values()) {
+        for(Component component : components.values()) {
             component.update(deltaTime);
         }
     }
 
     @Override
     public void render(GUI gui) {
-        for(Component component : fields.values()) {
+        for(Component component : components.values()) {
             component.render();
         }
     }
 
     @Override
     public void resize() {
-        for(Component component : fields.values()) {
+        for(Component component : components.values()) {
             component.resize();
         }
     }

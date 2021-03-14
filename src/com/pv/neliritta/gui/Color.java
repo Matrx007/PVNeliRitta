@@ -1,4 +1,5 @@
 package com.pv.neliritta.gui;
+// Written by Rainis Randmaa
 
 public class Color {
     public int r, g, b, a;

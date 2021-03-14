@@ -1,4 +1,5 @@
 package com.pv.neliritta.gui.components;
+// Written by Rainis Randmaa
 
 import com.pv.neliritta.GraphicsManager;
 import com.pv.neliritta.Utilities;
@@ -12,6 +13,9 @@ import com.pv.neliritta.localization.Localization;
 import processing.core.PConstants;
 import processing.core.PFont;
 
+/*
+* Used to capture user interactions. Callback is used to do something useful when the button gets pressed.
+* */
 public class Button implements Component {
     Main main;
 

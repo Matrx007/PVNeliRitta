@@ -1,6 +1,5 @@
 package com.pv.neliritta.backend;
-// Written by Rainis Randmaa (function names, parameters and return types only)
-// Written by Gregor Suurvarik (everything else)
+// Written by Gregor Suurvarik
 
 
 import java.util.Random;

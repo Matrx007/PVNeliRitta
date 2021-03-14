@@ -1,10 +1,8 @@
-package com.pv.neliritta;// Written by Rainis Randmaa
+package com.pv.neliritta;
+// Written by Rainis Randmaa
 
 import com.pv.neliritta.gui.Component;
-import com.pv.neliritta.gui.states.InGame;
-import com.pv.neliritta.gui.states.InGamePauseMenu;
-import com.pv.neliritta.gui.states.MainMenu;
-import com.pv.neliritta.gui.states.MatchOptions;
+import com.pv.neliritta.gui.states.*;
 import processing.core.PConstants;
 
 /*
@@ -22,6 +20,7 @@ public class GUI implements Component {
     /* Used to control the program flow */
     public enum State {
         MAIN_MENU,
+        LOAD_GAME,
         MATCH_OPTIONS,
         IN_GAME,
         IN_GAME_PAUSE_MENU
@@ -31,6 +30,7 @@ public class GUI implements Component {
     /* Game states */
     public MainMenu mainMenu = new MainMenu();
     public InGame inGame = new InGame();
+    public LoadGame loadGame = new LoadGame();
     public MatchOptions matchOptions = new MatchOptions();
     public InGamePauseMenu inGamePauseMenu = new InGamePauseMenu();
 
@@ -41,6 +41,7 @@ public class GUI implements Component {
     public void setup() {
         mainMenu.setup(this);
         inGame.setup(this);
+        loadGame.setup(this);
         matchOptions.setup(this);
         inGamePauseMenu.setup(this);
     }
@@ -49,6 +50,7 @@ public class GUI implements Component {
     public void resize() {
         mainMenu.resize();
         inGame.resize();
+        loadGame.resize();
         matchOptions.resize();
         inGamePauseMenu.resize();
     }
@@ -61,6 +63,9 @@ public class GUI implements Component {
                 break;
             case IN_GAME:
                 inGame.update(this, deltaTime);
+                break;
+            case LOAD_GAME:
+                loadGame.update(this, deltaTime);
                 break;
             case MATCH_OPTIONS:
                 matchOptions.update(this, deltaTime);
@@ -88,6 +93,9 @@ public class GUI implements Component {
                 break;
             case IN_GAME:
                 inGame.render(this);
+                break;
+            case LOAD_GAME:
+                loadGame.render(this);
                 break;
             case MATCH_OPTIONS:
                 matchOptions.render(this);

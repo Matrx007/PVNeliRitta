@@ -1,6 +1,8 @@
 package com.pv.neliritta;
 
 public class Utilities {
+    // Code I copied from StackOverflow :))
+
     public static boolean isPointInsideTriangle(float x1, float y1, float x2, float y2, float x3, float y3, float x, float y) {
         double ABC = Math.abs (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2));
         double ABP = Math.abs (x1 * (y2 - y) + x2 * (y - y1) + x * (y1 - y2));

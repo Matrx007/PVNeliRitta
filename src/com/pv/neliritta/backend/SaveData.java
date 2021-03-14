@@ -1,4 +1,5 @@
 package com.pv.neliritta.backend;
+// Written by Gregor Suurvarik
 
 public class SaveData implements java.io.Serializable {
 

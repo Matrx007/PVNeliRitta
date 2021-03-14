@@ -1,7 +1,7 @@
 package com.pv.neliritta;
+// Written by Rainis Randmaa
 
 import com.ydgames.mxe.GameContainer;
-import processing.core.PFont;
 import processing.core.PImage;
 
 import java.util.HashMap;

@@ -23,6 +23,11 @@
 
     start:                  "Alusta"
 
+[LOAD GAME]
+    refresh:                "Värskenda"
+    load:                   "Ava"
+    main_menu:              "Tagasi peamenüüsse"
+
 [IN GAME GUI]
     pause:                  "Paus"
 
