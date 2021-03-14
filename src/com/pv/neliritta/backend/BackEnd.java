@@ -182,13 +182,6 @@ public class BackEnd {
         if (playerID == 1) {
             p1Column = x;
         }
-        try {
-            SaveManager.saveGame(this, "Test");
-            System.out.println(SaveManager.listSaves());
-            SaveManager.loadGame("Test");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         return true;
     }
 

@@ -62,8 +62,6 @@ public class Board implements Component {
         backEnd.whoseTurn = 1;
 
         resize();
-
-        System.out.println("Using difficulty: "+difficulty.toString());
     }
 
     public Board(Main main, BackEnd newBackEnd) {
@@ -206,16 +204,6 @@ public class Board implements Component {
 
     @Override
     public void render() {
-        if(main.getGame().input.isKeyUp(ENTER)) {
-            System.out.println("boardWidth = " + boardWidth);
-            System.out.println("boardHeight = " + boardHeight);
-            System.out.println("backEnd.whoseTurn = " + backEnd.whoseTurn);
-            System.out.println("whoWon = " + whoWon);
-            System.out.println("backEnd.againstComputer = " + backEnd.againstComputer);
-            System.out.println("backEnd.backEnd.againstComputer = " + backEnd.againstComputer);
-            System.out.println("difficulty = " + difficulty);
-        }
-
         /* Draw holes with background color */
         mouseOverColumn = -1;
 

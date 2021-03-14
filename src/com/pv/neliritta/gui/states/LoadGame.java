@@ -44,7 +44,6 @@ public class LoadGame implements State {
                 8,
                 new Localization.Term[0],
                 () -> {
-                    System.out.println("double clicked");
                     ScrollList me = ((ScrollList)components.get("list"));
 
                     Localization.Term term = me.getCurrentEntry();
@@ -52,15 +51,12 @@ public class LoadGame implements State {
                         return;
                     }
 
-                    System.out.println("at 0");
-
                     BackEnd newBackEnd = SaveManager.loadGame(me.getCurrentEntry().value);
 
                     if(newBackEnd == null) {
                         System.out.println("Save file couldn't be opened");
                         return;
                     }
-                    System.out.println("at 1");
 
                     gui.inGame.board = new Board(gui.main, newBackEnd);
                     gui.state = GUI.State.IN_GAME;
@@ -88,7 +84,6 @@ public class LoadGame implements State {
 
     private void refreshFileList() {
         ArrayList<String> saveFiles = SaveManager.listSaves();
-        System.out.println("saveFiles = " + saveFiles);
         Localization.Term[] saveFileEntries = new Localization.Term[saveFiles.size()];
 
         int saveFileCount = saveFiles.size();

@@ -112,7 +112,6 @@ public class ScrollList implements Component {
         if(main.getGame().input.isButtonUp(PConstants.LEFT)) {
             if(lastClicked != -1 && lastClicked == mouseOverEntryIndex) {
                 if(lastClickedTimer < 1f) {
-                    System.out.println("selected: "+entries[mouseOverEntryIndex]);
                     onDoubleClick.run();
                 }
             }

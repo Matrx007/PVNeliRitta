@@ -46,7 +46,7 @@ public class MatchOptions implements State {
                 Localization.reference("match options", "rows"),
                 Pattern.compile("[0-9]+"), Input.CHARACTER_PATTERN_NUMBERS,
                 () -> {
-                    System.out.println("Rows: "+((Input) components.get("rows")).getInput());
+                    start(gui);
                 }
         ));
 
@@ -64,7 +64,7 @@ public class MatchOptions implements State {
                 Localization.reference("match options", "columns"),
                 Pattern.compile("[0-9]+"), Input.CHARACTER_PATTERN_NUMBERS,
                 () -> {
-                    System.out.println("Columns: "+((Input) components.get("columns")).getInput());
+                    start(gui);
                 }
         ));
 
@@ -84,7 +84,6 @@ public class MatchOptions implements State {
                         Localization.reference("match options", "normal")
                 },
                 () -> {
-                    System.out.println("Option changed");
                 }
         );
 
@@ -94,38 +93,7 @@ public class MatchOptions implements State {
                 () -> fieldWidth, () -> fieldHeight,
                 Localization.reference("match options", "start"),
                 () -> {
-                    String columnsString = ((Input) components.get("columns")).getInput();
-                    String rowsString = ((Input) components.get("rows")).getInput();
-                    BackEnd.Difficulty difficulty;
-
-                    if(columnsString.length() == 0 && rowsString.length() == 0) {
-                        return;
-                    }
-
-                    Localization.Term selectedDifficulty = difficultyChooser.getSelected();
-                    if(selectedDifficulty == null) return;
-                    if(selectedDifficulty.key == null) return;
-
-                    switch (selectedDifficulty.key) {
-                        case "easy":
-                            difficulty = BackEnd.Difficulty.EASY;
-                            break;
-                        case "normal":
-                            difficulty = BackEnd.Difficulty.NORMAL;
-                            break;
-                        default:
-                            return;
-                    }
-
-                    System.out.println("againstComputer@MatchOptions = " + againstComputer);
-                    gui.inGame.board = new Board(gui.main,
-                            Integer.parseInt(columnsString),
-                            Integer.parseInt(rowsString),
-                            againstComputer,
-                            difficulty
-                    );
-
-                    gui.state = GUI.State.IN_GAME;
+                    start(gui);
                 }
         ));
 
@@ -138,6 +106,41 @@ public class MatchOptions implements State {
                     gui.state = GUI.State.MAIN_MENU;
                 }
         ));
+    }
+
+    private void start(GUI gui) {
+        String columnsString = ((Input) components.get("columns")).getInput();
+        String rowsString = ((Input) components.get("rows")).getInput();
+        BackEnd.Difficulty difficulty;
+
+        if(columnsString.length() == 0 && rowsString.length() == 0) {
+            return;
+        }
+
+        Localization.Term selectedDifficulty = difficultyChooser.getSelected();
+        if(selectedDifficulty == null) return;
+        if(selectedDifficulty.key == null) return;
+
+        switch (selectedDifficulty.key) {
+            case "easy":
+                difficulty = BackEnd.Difficulty.EASY;
+                break;
+            case "normal":
+                difficulty = BackEnd.Difficulty.NORMAL;
+                break;
+            default:
+                return;
+        }
+
+        System.out.println("againstComputer@MatchOptions = " + againstComputer);
+        gui.inGame.board = new Board(gui.main,
+                Integer.parseInt(columnsString),
+                Integer.parseInt(rowsString),
+                againstComputer,
+                difficulty
+        );
+
+        gui.state = GUI.State.IN_GAME;
     }
 
     @Override
