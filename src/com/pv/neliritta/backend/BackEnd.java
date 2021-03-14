@@ -34,11 +34,12 @@ public class BackEnd {
     * 'whoseTurn' is either a '0' when no-one is winning (game is still going on) or
     * an ID of the player whose turn is at the moment (meaning (s)he hasn't done anything yet but is about to'.
     * */
-    public BackEnd(int[][] board, int whoseTurn, Difficulty difficulty) {
+    public BackEnd(int[][] board, int whoseTurn, Difficulty difficulty, Boolean againstComputer) {
         /* TODO */
         this.board = board;
         this.whoseTurn = whoseTurn;
         this.difficulty = difficulty;
+        this.againstComputer = againstComputer;
     }
 
     /*
@@ -47,6 +48,7 @@ public class BackEnd {
     * */
     private int[][] board;
     private int whoseTurn;
+    public boolean againstComputer;
     // Difficulty just in case, default normal
     private Difficulty difficulty;
     // Player 1 last move

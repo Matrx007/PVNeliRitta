@@ -63,6 +63,7 @@ public class SaveManager {
         save.board = backEnd.currentBoardState();
         save.whoseTurn = backEnd.getWhoseTurn();
         save.difficulty = backEnd.getDifficulty();
+        save.againstComputer = backEnd.againstComputer;
         // Calling saveing method
         saveToFile(save, saveName);
     }
@@ -78,7 +79,7 @@ public class SaveManager {
             // Getting saveData from loading a save
             SaveData save = (SaveData) loadSaveFile(saveName);
             // Making new BackEnd with save data
-            return new BackEnd(save.board, save.whoseTurn, save.difficulty);
+            return new BackEnd(save.board, save.whoseTurn, save.difficulty, save.againstComputer);
         } catch (Exception e) {
             /* TODO: Do something with error */
             // Logs Error To System logger
