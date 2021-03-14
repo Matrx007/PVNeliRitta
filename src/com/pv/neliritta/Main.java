@@ -36,7 +36,7 @@ public class Main extends GameContainer {
     public void setup() {
         // Create "save" folder if it doesn't exist yet
         //noinspection ResultOfMethodCallIgnored
-        new File("./save").mkdir();
+        new File("save").mkdir();
 
         /* ### LOAD FONTS ### */
         FontManager.loadFont(this, "button-font", "assets/fonts/AnnieUseYourTelescope-Regular.ttf", 64f);
