@@ -13,86 +13,78 @@ import processing.core.PImage;
 
 import java.util.Stack;
 
-public class Board implements Component {
-    private Main main;
+import static processing.core.PConstants.ENTER;
 
-    private static float BALL_SIZE = 1.03f;
+public class Board implements Component {
+    private final Main main;
+
+    private static final float BALL_SIZE = 1.03f;
 
     /* Board data */
-    private int[][] boardState;
+
     private int boardWidth;
     private int boardHeight;
 
     /* Gameplay */
 
-    private int whoseTurn = 0;
     private int whoWon = 0;
-    public boolean againstComputer = false;
 
     // Used to make the computer behave more like a human by taking time to think (in seconds)
     private float computerThinkingTime = 0;
 
-    private BackEnd backEnd;
-    private BackEnd.Difficulty difficulty;
+    public BackEnd backEnd;
+    private final BackEnd.Difficulty difficulty;
 
     /* Appearance */
-    public Color background = new Color(88, 88, 88);
-    public Color foreground = new Color(143, 143, 143);
-
-    private PImage slotImage;
 
     public Color player1Color = new Color(92, 124, 138);
     public Color player2Color = new Color(135, 98, 91);
 
     private int mouseOverColumn = -1;
 
-    private Stack<BallAnimation> ballAnimations = new Stack<>();
+    private final Stack<BallAnimation> ballAnimations = new Stack<>();
 
     /* Layout */
-    float width, height, padding, topLeftX, topLeftY, bottomRightX, bottomRightY, holeSpacing;
+    float height, topLeftX, topLeftY, holeSpacing;
     float boardStartX, boardStartY, totalWidth, totalHeight;
 
-    public Board(Main main, int boardWidth, int boardHeight, BackEnd.Difficulty difficulty) {
+    public Board(Main main, int boardWidth, int boardHeight, boolean againstComputer, BackEnd.Difficulty difficulty) {
         this.main = main;
         this.boardWidth = boardWidth;
         this.boardHeight = boardHeight;
         this.difficulty = difficulty;
 
-        slotImage = GraphicsManager.loadedGraphics.get("slot");
+        this.backEnd = new BackEnd(boardWidth, boardHeight, difficulty);
+        this.backEnd.againstComputer = againstComputer;
 
-        init();
+        computerThinkingTime = 0;
+        whoWon = 0;
+        backEnd.whoseTurn = 1;
 
         resize();
 
         System.out.println("Using difficulty: "+difficulty.toString());
     }
 
-    public Board(Main main, int[][] boardState, int whoseTurn, boolean againstComputer, BackEnd.Difficulty difficulty) {
+    public Board(Main main, BackEnd newBackEnd) {
         this.main = main;
-        this.boardState = boardState;
-        this.whoseTurn = whoseTurn;
-        this.againstComputer = againstComputer;
-        this.difficulty = difficulty;
 
-        this.backEnd = new BackEnd(boardState, whoseTurn, difficulty);
+        this.difficulty = newBackEnd.getDifficulty();
+        this.whoWon = newBackEnd.whoWon();
+        this.backEnd = newBackEnd;
+
+        boardWidth = newBackEnd.currentBoardState().length;
+        boardHeight = newBackEnd.currentBoardState()[0].length;
 
         resize();
     }
 
-//    public Board(Main main, BackEnd newBackEnd) {
-//        this.main = main;
-//
-//        this.boardState = newBackEnd.currentBoardState();
-//        this.whoseTurn = newBackEnd.getWhoseTurn();
-//        this.againstComputer = newBackEnd.ge
-//    }
-
-    public void init() {
-        boardState = new int[boardWidth][boardHeight];
+    public void reset() {
 
         this.backEnd = new BackEnd(boardWidth, boardHeight, difficulty);
 
-        whoseTurn = 1;
+        backEnd.againstComputer = main.gui.matchOptions.againstComputer;
+        backEnd.whoseTurn = 1;
         whoWon = 0;
         computerThinkingTime = 0;
     }
@@ -124,8 +116,8 @@ public class Board implements Component {
         /* If mouse is on top of the board */
         if(mouseOverColumn > -1) {
             if(main.getGame().input.isButtonUp(PConstants.LEFT) && ballAnimations.empty()) {
-                if(againstComputer) {
-                    if(whoseTurn == 1) {
+                if(backEnd.againstComputer) {
+                    if(backEnd.whoseTurn == 1) {
                         boolean result = backEnd.executePlayerTurn(1, mouseOverColumn);
 
                         // Find the first free slot in that column, used to display ball dropping animation
@@ -141,7 +133,7 @@ public class Board implements Component {
                         if(result) {
                             computerThinkingTime = (float) (Math.random() * 2 + 2);
 
-                            whoseTurn = 2;
+                            backEnd.whoseTurn = 2;
 
                             // Spawn the ball dropping animation
                             ballAnimations.push(new BallAnimation(mouseOverColumn, (boardHeight) - firstFreeSlot, player1Color,
@@ -149,7 +141,7 @@ public class Board implements Component {
                         }
                     }
                 } else {
-                    boolean result = backEnd.executePlayerTurn(whoseTurn, mouseOverColumn);
+                    boolean result = backEnd.executePlayerTurn(backEnd.whoseTurn, mouseOverColumn);
 
                     // Find the first free slot in that column, used to display ball dropping animation
                     int firstFreeSlot = boardHeight;
@@ -162,10 +154,10 @@ public class Board implements Component {
 
                     // If the turn was successful, computer will take a turn now
                     if(result) {
-                        whoseTurn = 1 + (whoseTurn) % 2;
+                        backEnd.whoseTurn = 1 + (backEnd.whoseTurn) % 2;
 
                         // Spawn the ball animation
-                        ballAnimations.push(new BallAnimation(mouseOverColumn, (boardHeight) - firstFreeSlot, whoseTurn == 1 ? player2Color : player1Color,
+                        ballAnimations.push(new BallAnimation(mouseOverColumn, (boardHeight) - firstFreeSlot, backEnd.whoseTurn == 1 ? player2Color : player1Color,
                                 () -> {}));
                     }
                 }
@@ -173,7 +165,7 @@ public class Board implements Component {
         }
 
         /* Simulate computer's thinking time */
-        if(againstComputer && whoseTurn == 2) {
+        if(backEnd.againstComputer && backEnd.whoseTurn == 2) {
             if(computerThinkingTime < 0) {
                 int column = backEnd.executeComputerTurn();
 
@@ -190,7 +182,7 @@ public class Board implements Component {
                     }
 
                     computerThinkingTime = 0;
-                    whoseTurn = 1;
+                    backEnd.whoseTurn = 1;
 
                     // Spawn the ball animation
                     ballAnimations.push(new BallAnimation(column, (boardHeight) - firstFreeSlot, player2Color,
@@ -214,6 +206,16 @@ public class Board implements Component {
 
     @Override
     public void render() {
+        if(main.getGame().input.isKeyUp(ENTER)) {
+            System.out.println("boardWidth = " + boardWidth);
+            System.out.println("boardHeight = " + boardHeight);
+            System.out.println("backEnd.whoseTurn = " + backEnd.whoseTurn);
+            System.out.println("whoWon = " + whoWon);
+            System.out.println("backEnd.againstComputer = " + backEnd.againstComputer);
+            System.out.println("backEnd.backEnd.againstComputer = " + backEnd.againstComputer);
+            System.out.println("difficulty = " + difficulty);
+        }
+
         /* Draw holes with background color */
         mouseOverColumn = -1;
 
@@ -221,8 +223,8 @@ public class Board implements Component {
 slot:      for(int j = 0; j < boardHeight; j++) {
 
 
-                if(!(againstComputer && whoseTurn == 2) &&
-                        Utilities.isPointInsidePerspectiveRectangle(main,
+                if(!(backEnd.againstComputer && backEnd.whoseTurn == 2) &&
+                        Utilities.isMouseInsidePerspectiveRectangle(main,
                                 boardStartX + holeSpacing * i,
                                 boardStartY,
                                 boardStartX + holeSpacing * i + holeSpacing,
@@ -233,7 +235,7 @@ slot:      for(int j = 0; j < boardHeight; j++) {
                     main.getGame().tint(255, 192f);
                 }
                 main.getGame().imageMode(PConstants.CORNER);
-                main.getGame().image(slotImage, boardStartX + holeSpacing * i, boardStartY + holeSpacing * j, holeSpacing, holeSpacing);
+                main.getGame().image(GraphicsManager.loadedGraphics.get("slot"), boardStartX + holeSpacing * i, boardStartY + holeSpacing * j, holeSpacing, holeSpacing);
 
                 if(j == 0)
                     main.getGame().image(GraphicsManager.loadedGraphics.get("slot-top"),
@@ -264,10 +266,6 @@ slot:      for(int j = 0; j < boardHeight; j++) {
                             holeSpacing * BALL_SIZE,
                             holeSpacing * BALL_SIZE
                     );
-//                    main.getGame().circle(
-//                            boardStartX + holeSpacing * i + holeSpacing / 2f,
-//                            boardStartY + holeSpacing * j + holeSpacing / 2f,
-//                            holeSpacing / 4f * 3f);
                 } else if(backEnd.currentBoardState()[i][(boardHeight-1)-j] == 2) {
                     main.getGame().fill(player2Color.r, player2Color.g, player2Color.b, player2Color.a);
 
@@ -279,10 +277,6 @@ slot:      for(int j = 0; j < boardHeight; j++) {
                             holeSpacing * BALL_SIZE,
                             holeSpacing * BALL_SIZE
                     );
-//                    main.getGame().circle(
-//                            boardStartX + holeSpacing * i + holeSpacing / 2f,
-//                            boardStartY + holeSpacing * j + holeSpacing / 2f,
-//                            holeSpacing / 4f * 3f);
                 }
 
 
@@ -296,7 +290,7 @@ slot:      for(int j = 0; j < boardHeight; j++) {
             animation.render();
         }
 
-        if(mouseOverColumn != -1 && !(againstComputer && whoseTurn == 2))  {
+        if(mouseOverColumn != -1 && !(backEnd.againstComputer && backEnd.whoseTurn == 2))  {
             main.getGame().fill(255, 255, 255, 16);
             main.getGame().noStroke();
 
@@ -305,11 +299,11 @@ slot:      for(int j = 0; j < boardHeight; j++) {
     }
 
     public int getWhoseTurn() {
-        return whoseTurn;
+        return backEnd.whoseTurn;
     }
 
     public boolean isAgainstComputer() {
-        return againstComputer;
+        return backEnd.againstComputer;
     }
 
     public int getWhoWon() {
@@ -337,7 +331,7 @@ slot:      for(int j = 0; j < boardHeight; j++) {
         private final float endX, endY;
         private float currentX, currentY;
 
-        public int slotX, slotY;
+        public final int slotX, slotY;
 
         public boolean alive = true;
         private float timer = 0;
@@ -364,7 +358,7 @@ slot:      for(int j = 0; j < boardHeight; j++) {
             alpha = (float)Math.min(1f, alpha + deltaTime / ANIMATION_FADE_IN_TIME);
 
             // Easing result, ranges from 0-1
-            float location = 0;
+            float location;
             // Input variable, ranges from 0-1
             float time = timer / ANIMATION_FALL_TIME;
 
@@ -411,10 +405,6 @@ slot:      for(int j = 0; j < boardHeight; j++) {
                     holeSpacing * BALL_SIZE,
                     holeSpacing * BALL_SIZE
             );
-//            main.getGame().circle(
-//                    currentX,
-//                    currentY,
-//                    holeSpacing / 4f * 3f);
         }
     }
 }

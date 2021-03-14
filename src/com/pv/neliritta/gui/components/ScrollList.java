@@ -14,19 +14,19 @@ import processing.core.PConstants;
 import processing.core.PFont;
 
 /*
-* Scrolalble list, used as save file laoder
+* Scrollable list, used to display list items. Callback will be triggered whenever user double clicks on an entry.
 *  */
 public class ScrollList implements Component {
-    Main main;
+    final Main main;
 
     /* Boundaries of the button */
     public int x, y, width, height, entryHeight;
     public Constraint xConstraint, yConstraint, widthConstraint, entryHeightConstraint;
 
-    private float realTopLeftX, realTopLeftY, realBottomRightX, realBottomRightY;
-    private float[][] realEntryCoordinates;
+    private final float[][] realEntryCoordinates;
 
-    private int entriesAtOnce;
+    // Could be into a Constraint
+    private final int entriesAtOnce;
     private static final int SCROLL_SUB_STEPS = 10;
     private int scroll = 0, scrollSubStep = 0;
     private float scrollMomentum = 0f;
@@ -40,10 +40,9 @@ public class ScrollList implements Component {
     public PFont font = FontManager.loadedFonts.get("button-font");
 
     /* State */
-    public boolean isMouseOver;
-    private boolean[] isMouseOverEntry;
+    private final boolean[] isMouseOverEntry;
 
-    private int lastClicked = -1;
+    private int lastClicked = Integer.MAX_VALUE;
     public int mouseOverEntryIndex = -1;
     private float lastClickedTimer = 0f;
 
@@ -51,8 +50,8 @@ public class ScrollList implements Component {
     public Action onDoubleClick;
 
     public Localization.Term getCurrentEntry() {
-        if(mouseOverEntryIndex == -1) return null;
-        return entries[mouseOverEntryIndex+scroll];
+        if(mouseOverEntryIndex < 0) return null;
+        return entries[mouseOverEntryIndex];
     }
 
     public ScrollList(Main main,
@@ -87,7 +86,7 @@ public class ScrollList implements Component {
 
     @Override
     public void update(double deltaTime) {
-        mouseOverEntryIndex = -1;
+//        mouseOverEntryIndex = -1;
 
         // Highlight entries
 
@@ -99,14 +98,13 @@ public class ScrollList implements Component {
                             realEntryCoordinates[i][2], realEntryCoordinates[i][1],
                             main.getGame().mouseX,
                             main.getGame().mouseY)
-                            ||
-                            Utilities.isPointInsideTriangle(
-                                    realEntryCoordinates[i][2], realEntryCoordinates[i][1],
-                                    realEntryCoordinates[i][0], realEntryCoordinates[i][3],
-                                    realEntryCoordinates[i][2], realEntryCoordinates[i][3],
-                                    main.getGame().mouseX,
-                                    main.getGame().mouseY);
-            if(isMouseOverEntry[i]) mouseOverEntryIndex = i;
+                    ||
+                    Utilities.isPointInsideTriangle(
+                            realEntryCoordinates[i][2], realEntryCoordinates[i][1],
+                            realEntryCoordinates[i][0], realEntryCoordinates[i][3],
+                            realEntryCoordinates[i][2], realEntryCoordinates[i][3],
+                            main.getGame().mouseX,
+                            main.getGame().mouseY);
         }
 
         // Double-click
@@ -114,6 +112,7 @@ public class ScrollList implements Component {
         if(main.getGame().input.isButtonUp(PConstants.LEFT)) {
             if(lastClicked != -1 && lastClicked == mouseOverEntryIndex) {
                 if(lastClickedTimer < 1f) {
+                    System.out.println("selected: "+entries[mouseOverEntryIndex]);
                     onDoubleClick.run();
                 }
             }
@@ -131,7 +130,7 @@ public class ScrollList implements Component {
             scrollSubStep = 0;
             scrollMomentum = 0;
         }
-        if(scroll == entries.length-entriesAtOnce+1 && scrollSubStep > 0) {
+        if((scroll == entries.length-entriesAtOnce+1 || entries.length < entriesAtOnce) && scrollSubStep > 0) {
             scrollSubStep = 0;
             scrollMomentum = 0;
         }
@@ -151,6 +150,7 @@ public class ScrollList implements Component {
         scroll = Math.max(0, Math.min(entries.length-entriesAtOnce+1, scroll));
 
         scrollMomentum -= Math.max(-0.1f, Math.min(0.1f, scrollMomentum));
+        mouseOverEntryIndex = -1;
     }
 
     @Override
@@ -171,7 +171,9 @@ public class ScrollList implements Component {
             float offset = (SCROLL_SUB_STEPS-scrollSubStep)/(float)SCROLL_SUB_STEPS*entryHeight;
 
             main.getGame().textFont(font, textSize);
+            if(isMouseOverEntry[i]) mouseOverEntryIndex = n;
             if(isMouseOverEntry[i] && !main.getGame().input.isButton(PConstants.LEFT)) {
+                mouseOverEntryIndex = n;
                 main.getGame().image(GraphicsManager.loadedGraphics.get("button-hover"), x, y + entryHeight*i + offset, width*1.11f, entryHeight*1.43f);
                 main.getGame().fill(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a*alpha);
             } else {
@@ -184,10 +186,10 @@ public class ScrollList implements Component {
 
             // Calculate real coordinates
             realEntryCoordinates[i] = new float[]{
-                    realTopLeftX = main.getGame().screenX(x - width / 2f, y + entryHeight*i - entryHeight/2f + offset),
-                    realTopLeftY = main.getGame().screenY(x - width / 2f, y + entryHeight*i - entryHeight/2f + offset),
-                    realBottomRightX = main.getGame().screenX(x + width / 2f, y + entryHeight*i + entryHeight/2f + offset),
-                    realBottomRightY = main.getGame().screenY(x + width / 2f, y + entryHeight*i + entryHeight/2f + offset)
+                    main.getGame().screenX(x - width / 2f, y + entryHeight*i - entryHeight/2f + offset),
+                    main.getGame().screenY(x - width / 2f, y + entryHeight*i - entryHeight/2f + offset),
+                    main.getGame().screenX(x + width / 2f, y + entryHeight*i + entryHeight/2f + offset),
+                    main.getGame().screenY(x + width / 2f, y + entryHeight*i + entryHeight/2f + offset)
             };
         }
     }

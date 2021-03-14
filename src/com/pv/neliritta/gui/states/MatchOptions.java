@@ -17,6 +17,10 @@ import java.util.regex.Pattern;
 public class MatchOptions implements State {
     HashMap<String, Component> components;
 
+    Label difficultyLabel;
+    Options difficultyChooser;
+    public boolean againstComputer = false;
+
     @Override
     public void setup(GUI gui) {
 
@@ -64,14 +68,14 @@ public class MatchOptions implements State {
                 }
         ));
 
-        components.put("difficulty_label", new Label(gui.main,
+        difficultyLabel = new Label(gui.main,
                 () -> 0,
                 () -> (fieldHeight + fieldSpacing) * 0,
                 () -> fieldWidth, () -> fieldHeight,
                 Localization.reference("match options", "difficulty")
-        ));
+        );
 
-        components.put("difficulty", new Options(gui.main,
+        difficultyChooser = new Options(gui.main,
                 () -> 0,
                 () -> (fieldHeight + fieldSpacing) * 1,
                 () -> fieldWidth, () -> fieldHeight,
@@ -82,11 +86,11 @@ public class MatchOptions implements State {
                 () -> {
                     System.out.println("Option changed");
                 }
-        ));
+        );
 
         components.put("start", new Button(gui.main,
                 () -> 0,
-                () -> (fieldHeight + fieldSpacing) * 4,
+                () -> (fieldHeight + fieldSpacing) * 3,
                 () -> fieldWidth, () -> fieldHeight,
                 Localization.reference("match options", "start"),
                 () -> {
@@ -98,7 +102,11 @@ public class MatchOptions implements State {
                         return;
                     }
 
-                    switch (((Options) components.get("difficulty")).getSelected().key) {
+                    Localization.Term selectedDifficulty = difficultyChooser.getSelected();
+                    if(selectedDifficulty == null) return;
+                    if(selectedDifficulty.key == null) return;
+
+                    switch (selectedDifficulty.key) {
                         case "easy":
                             difficulty = BackEnd.Difficulty.EASY;
                             break;
@@ -109,14 +117,25 @@ public class MatchOptions implements State {
                             return;
                     }
 
+                    System.out.println("againstComputer@MatchOptions = " + againstComputer);
                     gui.inGame.board = new Board(gui.main,
                             Integer.parseInt(columnsString),
                             Integer.parseInt(rowsString),
+                            againstComputer,
                             difficulty
                     );
-                    gui.inGame.board.againstComputer = gui.inGame.againstComputer;
 
                     gui.state = GUI.State.IN_GAME;
+                }
+        ));
+
+        components.put("back", new Button(gui.main,
+                () -> 0,
+                () -> (fieldHeight + fieldSpacing) * 4,
+                () -> fieldWidth*0.75f, () -> fieldHeight,
+                Localization.reference("match options", "main_menu"),
+                () -> {
+                    gui.state = GUI.State.MAIN_MENU;
                 }
         ));
     }
@@ -126,12 +145,22 @@ public class MatchOptions implements State {
         for(Component component : components.values()) {
             component.update(deltaTime);
         }
+
+        if(againstComputer) {
+            difficultyChooser.update(deltaTime);
+            difficultyLabel.update(deltaTime);
+        }
     }
 
     @Override
     public void render(GUI gui) {
         for(Component component : components.values()) {
             component.render();
+        }
+
+        if(againstComputer) {
+            difficultyChooser.render();
+            difficultyLabel.render();
         }
     }
 
@@ -140,5 +169,8 @@ public class MatchOptions implements State {
         for(Component component : components.values()) {
             component.resize();
         }
+
+        difficultyChooser.resize();
+        difficultyLabel.resize();
     }
 }

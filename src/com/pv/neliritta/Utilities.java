@@ -1,7 +1,6 @@
 package com.pv.neliritta;
 
 public class Utilities {
-    // Code I copied from StackOverflow :))
 
     public static boolean isPointInsideTriangle(float x1, float y1, float x2, float y2, float x3, float y3, float x, float y) {
         double ABC = Math.abs (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2));
@@ -9,11 +8,11 @@ public class Utilities {
         double APC = Math.abs (x1 * (y - y3) + x * (y3 - y1) + x3 * (y1 - y));
         double PBC = Math.abs (x * (y2 - y3) + x2 * (y3 - y) + x3 * (y - y2));
 
-        // Room for error of 1.0f
+        // Room for error of 1.0f pixel
         return Math.abs((ABP + APC + PBC) - ABC) < 0.1f;
     }
 
-    public static boolean isPointInsidePerspectiveRectangle(Main main, float x1, float y1, float x2, float y2) {
+    public static boolean isMouseInsidePerspectiveRectangle(Main main, float x1, float y1, float x2, float y2) {
         return Utilities.isPointInsideTriangle(
                     main.getGame().screenX(x2, y1),
                     main.getGame().screenY(x2, y1),

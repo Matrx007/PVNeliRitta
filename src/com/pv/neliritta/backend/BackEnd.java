@@ -45,11 +45,11 @@ public class BackEnd {
     * Should be modified after every turn by either the function 'executePlayersTurn(int playerID)' or
     * 'executeComputersTurn()'.
     * */
-    private int[][] board;
-    private int whoseTurn;
+    private final int[][] board;
+    public int whoseTurn;
     public boolean againstComputer;
     // Difficulty just in case, default normal
-    private Difficulty difficulty;
+    private final Difficulty difficulty;
     // Player 1 last move
     private int p1Column = 0;
 

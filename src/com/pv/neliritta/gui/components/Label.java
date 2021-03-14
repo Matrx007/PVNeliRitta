@@ -14,7 +14,7 @@ import processing.core.PFont;
 * Displays text. Nothing else, no callbacks, no animations, just text.
 * */
 public class Label implements Component {
-    Main main;
+    final Main main;
 
     /* Boundaries of the button */
     public int x, y, width, height;
@@ -23,7 +23,6 @@ public class Label implements Component {
     /* Appearance */
     public Localization.Term text;
     public float textSize;
-    public Color backgroundColor = new Color(255, 255, 255, 64);
     public Color textColor = new Color(10, 10, 10, 160);
     public PFont font = FontManager.loadedFonts.get("button-font");
 

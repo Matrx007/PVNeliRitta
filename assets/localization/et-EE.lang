@@ -22,11 +22,17 @@
     normal:                 "Tavaline"
 
     start:                  "Alusta"
+    main_menu:              "Tagasi peamenüüsse"
 
 [LOAD GAME]
     refresh:                "Värskenda"
     load:                   "Ava"
     main_menu:              "Tagasi peamenüüsse"
+
+[SAVE GAME]
+    save_as:                "Salvesta nimega"
+    save:                   "Salvesta mäng"
+    back:                   "Tagasi"
 
 [IN GAME GUI]
     pause:                  "Paus"

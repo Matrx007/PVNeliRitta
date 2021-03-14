@@ -11,28 +11,27 @@ import processing.core.PConstants;
  * */
 public class GUI implements Component {
 
-    // guiOffsetX = (pixelWidth - guiSize) / 2
-    public int guiOffsetX, guiOffsetY;
-
     /* Used to access the engine, this will be passed to he 'com.pv.neliritta.GUI' class through its constructor */
-    public Main main;
+    public final Main main;
 
     /* Used to control the program flow */
     public enum State {
         MAIN_MENU,
-        LOAD_GAME,
-        MATCH_OPTIONS,
         IN_GAME,
+        LOAD_GAME,
+        SAVE_GAME,
+        MATCH_OPTIONS,
         IN_GAME_PAUSE_MENU
     }
     public State state = State.MAIN_MENU;
 
     /* Game states */
-    public MainMenu mainMenu = new MainMenu();
-    public InGame inGame = new InGame();
-    public LoadGame loadGame = new LoadGame();
-    public MatchOptions matchOptions = new MatchOptions();
-    public InGamePauseMenu inGamePauseMenu = new InGamePauseMenu();
+    public final MainMenu mainMenu = new MainMenu();
+    public final InGame inGame = new InGame();
+    public final LoadGame loadGame = new LoadGame();
+    public final SaveGame saveGame = new SaveGame();
+    public final MatchOptions matchOptions = new MatchOptions();
+    public final InGamePauseMenu inGamePauseMenu = new InGamePauseMenu();
 
     public GUI(Main main) {
         this.main = main;
@@ -42,6 +41,7 @@ public class GUI implements Component {
         mainMenu.setup(this);
         inGame.setup(this);
         loadGame.setup(this);
+        saveGame.setup(this);
         matchOptions.setup(this);
         inGamePauseMenu.setup(this);
     }
@@ -51,6 +51,7 @@ public class GUI implements Component {
         mainMenu.resize();
         inGame.resize();
         loadGame.resize();
+        saveGame.resize();
         matchOptions.resize();
         inGamePauseMenu.resize();
     }
@@ -66,6 +67,9 @@ public class GUI implements Component {
                 break;
             case LOAD_GAME:
                 loadGame.update(this, deltaTime);
+                break;
+            case SAVE_GAME:
+                saveGame.update(this, deltaTime);
                 break;
             case MATCH_OPTIONS:
                 matchOptions.update(this, deltaTime);
@@ -96,6 +100,9 @@ public class GUI implements Component {
                 break;
             case LOAD_GAME:
                 loadGame.render(this);
+                break;
+            case SAVE_GAME:
+                saveGame.render(this);
                 break;
             case MATCH_OPTIONS:
                 matchOptions.render(this);

@@ -17,27 +17,30 @@ import processing.core.PFont;
 * Used to capture user interactions. Callback is used to do something useful when the button gets pressed.
 * */
 public class Button implements Component {
-    Main main;
+    final Main main;
 
     /* Boundaries of the button */
     public int x, y, width, height;
-    public Constraint xConstraint, yConstraint, widthConstraint, heightConstraint;
+    public final Constraint xConstraint;
+    public final Constraint yConstraint;
+    public final Constraint widthConstraint;
+    public final Constraint heightConstraint;
 
     private float realTopLeftX, realTopLeftY, realBottomRightX, realBottomRightY;
 
     /* Appearance */
-    public Localization.Term text;
+    public final Localization.Term text;
     public float textSize;
-    public Color backgroundColor = new Color(0xFF, 0xFF, 0xFF);
-    public Color textColor = new Color(0x53, 0x4a, 0x75);
-    public PFont font = FontManager.loadedFonts.get("button-font");
+    public final Color backgroundColor = new Color(0xFF, 0xFF, 0xFF);
+    public final Color textColor = new Color(0x53, 0x4a, 0x75);
+    public final PFont font = FontManager.loadedFonts.get("button-font");
 
     /* State */
     public boolean isMouseOver;
     public boolean isMouseDown;
 
     /* Behaviour */
-    public Action onClick;
+    public final Action onClick;
 
     public Button(Main main,
                   Constraint xConstraint, Constraint yConstraint,
@@ -68,20 +71,11 @@ public class Button implements Component {
         isMouseOver = false;
         isMouseDown = false;
 
-        isMouseOver =
-                Utilities.isPointInsideTriangle(
-                        realTopLeftX, realTopLeftY,
-                        realTopLeftX, realBottomRightY,
-                        realBottomRightX, realTopLeftY,
-                        main.getGame().mouseX,
-                        main.getGame().mouseY)
-                ||
-                Utilities.isPointInsideTriangle(
-                        realBottomRightX, realTopLeftY,
-                        realTopLeftX, realBottomRightY,
-                        realBottomRightX, realBottomRightY,
-                        main.getGame().mouseX,
-                        main.getGame().mouseY);
+        isMouseOver = Utilities.isMouseInsidePerspectiveRectangle(
+                main,
+                realTopLeftX, realTopLeftY,
+                realBottomRightX, realBottomRightY
+        );
 
         if(isMouseOver) {
             /* If mouse is being pressed while it's inside the button */

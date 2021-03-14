@@ -12,7 +12,6 @@ public class InGame implements State {
     public Board board = null;
 
     Label inGame_whoseTurn;
-
     Button inGame_pause;
 
     boolean againstComputer;
@@ -25,14 +24,13 @@ public class InGame implements State {
         inGame_pause = new Button(gui.main,
                 () -> 0,
                 () -> - gui.main.guiSize / 2f - 64f, () -> 256, () -> 64, Localization.reference("in game gui", "pause"),
-                () -> {
-                    gui.state = GUI.State.IN_GAME_PAUSE_MENU;
-                });
+                () -> gui.state = GUI.State.IN_GAME_PAUSE_MENU);
     }
 
     public void update(GUI gui, double deltaTime) {
         board.update(deltaTime);
 
+        // after loading save file, whoseTurn == 0
         int whoseTurn = board.getWhoseTurn();
         if(whoseTurn == 1) {
             inGame_whoseTurn.text = Localization.reference("turn", "player1");

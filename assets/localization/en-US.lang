@@ -22,11 +22,17 @@
     normal:                 "Normal"
 
     start:                  "Start"
+    main_menu:              "Back to main menu"
 
 [LOAD GAME]
     refresh:                "Refresh"
     load:                   "Load"
     main_menu:              "Back to main menu"
+
+[SAVE GAME]
+    save_as:                "Save as"
+    save:                   "Save game"
+    back:                   "Tagasi"
 
 [IN GAME GUI]
     pause:                  "Pause"

@@ -10,8 +10,8 @@ import java.util.HashMap;
 * Used to load and access images globally.
 * */
 public class GraphicsManager {
-    public static HashMap<String, PImage> loadedGraphics = new HashMap<>();
-    public static HashMap<String, PImage[]> loadedAnimations = new HashMap<>();
+    public static final HashMap<String, PImage> loadedGraphics = new HashMap<>();
+    public static final HashMap<String, PImage[]> loadedAnimations = new HashMap<>();
 
     public static void loadImage(GameContainer gameContainer, String name, String file) {
         loadedGraphics.put(name, gameContainer.getGame().loadImage(file));

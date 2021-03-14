@@ -17,8 +17,7 @@ import processing.core.PFont;
 * Used to get user preference. User can cycle through options with left and right arrow.
 * */
 public class Options implements Component {
-
-    Main main;
+    final Main main;
 
     /* Boundaries of the button */
     public int x, y, width, height;
@@ -42,7 +41,7 @@ public class Options implements Component {
     public Action onChange;
 
     /* Properties */
-    private Localization.Term[] options = null;
+    private final Localization.Term[] options;
     private int selectedID = 0;
 
     public Localization.Term getSelected() { return options[selectedID]; }
@@ -76,50 +75,26 @@ public class Options implements Component {
         isMouseOverLeftButton = false;
         isMouseOverRightButton = false;
 
-        isMouseOver =
-                Utilities.isPointInsideTriangle(
-                        realTopLeftX, realTopLeftY,
-                        realTopLeftX, realBottomRightY,
-                        realBottomRightX, realTopLeftY,
-                        main.getGame().mouseX,
-                        main.getGame().mouseY)
-                        ||
-                        Utilities.isPointInsideTriangle(
-                                realBottomRightX, realTopLeftY,
-                                realTopLeftX, realBottomRightY,
-                                realBottomRightX, realBottomRightY,
-                                main.getGame().mouseX,
-                                main.getGame().mouseY);
 
-        isMouseOverLeftButton =
-                Utilities.isPointInsideTriangle(
-                        leftButtonX1, leftButtonY1,
-                        leftButtonX1, leftButtonY2,
-                        leftButtonX2, leftButtonY1,
-                        main.getGame().mouseX,
-                        main.getGame().mouseY)
-                        ||
-                        Utilities.isPointInsideTriangle(
-                                leftButtonX2, leftButtonY1,
-                                leftButtonX1, leftButtonY2,
-                                leftButtonX2, leftButtonY2,
-                                main.getGame().mouseX,
-                                main.getGame().mouseY);
+        isMouseOver = Utilities.isMouseInsidePerspectiveRectangle(
+                main,
+                realTopLeftX, realTopLeftY,
+                realBottomRightX, realBottomRightY
+        );
 
-        isMouseOverRightButton =
-                Utilities.isPointInsideTriangle(
-                        rightButtonX1, rightButtonY1,
-                        rightButtonX1, rightButtonY2,
-                        rightButtonX2, rightButtonY1,
-                        main.getGame().mouseX,
-                        main.getGame().mouseY)
-                        ||
-                        Utilities.isPointInsideTriangle(
-                                rightButtonX2, rightButtonY1,
-                                rightButtonX1, rightButtonY2,
-                                rightButtonX2, rightButtonY2,
-                                main.getGame().mouseX,
-                                main.getGame().mouseY);
+
+
+        isMouseOverLeftButton = Utilities.isMouseInsidePerspectiveRectangle(
+                main,
+                leftButtonX1, leftButtonY1,
+                leftButtonX2, leftButtonY2
+        );
+
+        isMouseOverRightButton = Utilities.isMouseInsidePerspectiveRectangle(
+                main,
+                rightButtonX1, rightButtonY1,
+                rightButtonX2, rightButtonY2
+        );
 
         if(main.getGame().input.isButtonUp(PConstants.LEFT)) {
             if(isMouseOverLeftButton) {

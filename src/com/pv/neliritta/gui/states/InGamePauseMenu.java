@@ -17,8 +17,6 @@ public class InGamePauseMenu {
 
         inGamePauseMenu_buttons = new HashMap<>();
 
-        int numButtons = 5;
-
         float buttonWidth = 384;
         float buttonHeight = 64;
         float buttonSpacing = 16;
@@ -27,16 +25,14 @@ public class InGamePauseMenu {
                 () -> 0,
                 () -> (buttonHeight + buttonSpacing) * -2,
                 () -> buttonWidth, () -> buttonHeight, Localization.reference("pause menu", "continue"),
-                () -> {
-                    gui.state = GUI.State.IN_GAME;
-                } ));
+                () -> gui.state = GUI.State.IN_GAME));
 
         inGamePauseMenu_buttons.put("new_game", new Button(gui.main,
                 () -> 0,
                 () -> (buttonHeight + buttonSpacing) * 0,
                 () -> buttonWidth, () -> buttonHeight, Localization.reference("pause menu", "new_game"),
                 () -> {
-                    gui.inGame.board.init();
+                    gui.inGame.board.reset();
                     gui.state = GUI.State.IN_GAME;
                 } ));
 
@@ -44,14 +40,16 @@ public class InGamePauseMenu {
                 () -> 0,
                 () -> (buttonHeight + buttonSpacing) * 1,
                 () -> buttonWidth, () -> buttonHeight,  Localization.reference("pause menu", "save"),
-                () -> {}));
+                () -> {
+                    gui.state = GUI.State.SAVE_GAME;
+                }));
 
         inGamePauseMenu_buttons.put("main_menu", new Button(gui.main,
                 () -> 0,
                 () -> (buttonHeight + buttonSpacing) * 2,
                 () -> buttonWidth, () -> buttonHeight,  Localization.reference("pause menu", "main_menu"),
                 () -> {
-                    gui.inGame.board.init();
+                    gui.inGame.board.reset();
                     gui.state = GUI.State.MAIN_MENU;
                 }));
     }
@@ -78,8 +76,6 @@ public class InGamePauseMenu {
 
     public void resize() {
         /* IN_GAME_PAUSE_MENU */
-        inGamePauseMenu_buttons.forEach((name, button) -> {
-            button.resize();
-        });
+        inGamePauseMenu_buttons.forEach((name, button) -> button.resize());
     }
 }

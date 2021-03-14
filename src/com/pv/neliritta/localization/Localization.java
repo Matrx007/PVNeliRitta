@@ -77,7 +77,7 @@ public class Localization {
 
     /* Returns reference to the term which will always be up to date after changing the language
     * */
-    private static HashMap<String, HashMap<String, Term>> termReferences = new HashMap<>();
+    private static final HashMap<String, HashMap<String, Term>> termReferences = new HashMap<>();
     public static Term reference(String group, String key) {
         group = group.toUpperCase();
         key = key.toLowerCase();

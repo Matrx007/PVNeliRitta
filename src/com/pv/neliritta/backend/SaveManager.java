@@ -65,7 +65,7 @@ public class SaveManager {
         save.whoseTurn = backEnd.getWhoseTurn();
         save.difficulty = backEnd.getDifficulty();
         save.againstComputer = backEnd.againstComputer;
-        // Calling saveing method
+        // Calling saving method
         saveToFile(save, saveName);
     }
 

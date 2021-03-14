@@ -29,8 +29,8 @@ public class MainMenu implements State {
                 () -> (buttonHeight + buttonSpacing) * -2,
                 () -> buttonWidth, () -> buttonHeight, Localization.reference("main menu", "player_vs_player"),
                 () -> {
+                    gui.matchOptions.againstComputer = false;
                     gui.state = GUI.State.MATCH_OPTIONS;
-                    gui.inGame.againstComputer = false;
                 } ));
 
         mainMenu_buttons.put("playerVsComputer", new Button(gui.main,
@@ -38,8 +38,8 @@ public class MainMenu implements State {
                 () -> (buttonHeight + buttonSpacing) * -1,
                 () -> buttonWidth, () -> buttonHeight, Localization.reference("main menu", "player_vs_computer"),
                 () -> {
+                    gui.matchOptions.againstComputer = true;
                     gui.state = GUI.State.MATCH_OPTIONS;
-                    gui.inGame.againstComputer = true;
                 } ));
 
         mainMenu_buttons.put("loadGame", new Button(gui.main,

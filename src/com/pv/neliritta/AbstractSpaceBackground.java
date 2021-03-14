@@ -12,12 +12,12 @@ import processing.core.PImage;
 public class AbstractSpaceBackground {
     private static class Particle {
         float rotationX, rotationY, rotationZ;
-        float rotationSpeedX, rotationSpeedY, rotationSpeedZ;
-        float distance;
+        final float rotationSpeedX;
+        final float rotationSpeedY;
+        final float rotationSpeedZ;
+        final float distance;
 
-        PImage particle;
-
-        Color randomColor;
+        final Color randomColor;
 
         public Particle(float rotationX, float rotationY, float rotationZ, float distance) {
             this.rotationX = rotationX;
@@ -42,15 +42,14 @@ public class AbstractSpaceBackground {
 
 
 
-    private Main main;
+    private final Main main;
 
-    private Particle[] particles;
+    private final Particle[] particles;
 
-    private PImage particleImage;
+    private final PImage particleImage;
 
     private float smoothMouseX = 0, smoothMouseY = 0;
 
-    private float rotationX = 0, rotationY = 0, rotationZ = 0;
     private float cameraRotationX = 0, cameraRotationY = 0;
 
     public AbstractSpaceBackground(Main main) {
@@ -90,10 +89,10 @@ public class AbstractSpaceBackground {
         cameraRotationY = smoothMouseX / main.guiSize * 2f / 7f;
 
 
-        for(int i = 0; i < particles.length; i++) {
-            particles[i].rotationX += particles[i].rotationSpeedX * deltaTime;
-            particles[i].rotationY += particles[i].rotationSpeedY * deltaTime;
-            particles[i].rotationZ += particles[i].rotationSpeedZ * deltaTime;
+        for (Particle particle : particles) {
+            particle.rotationX += particle.rotationSpeedX * deltaTime;
+            particle.rotationY += particle.rotationSpeedY * deltaTime;
+            particle.rotationZ += particle.rotationSpeedZ * deltaTime;
         }
     }
 
@@ -123,40 +122,33 @@ public class AbstractSpaceBackground {
         main.getGame().rotateX(cameraRotationX);
         main.getGame().rotateY(cameraRotationY);
 
+        float rotationX = 0;
+        float rotationY = 0;
+        float rotationZ = 0;
+
         main.getGame().rotateX(rotationX);
         main.getGame().rotateY(rotationY);
         main.getGame().rotateZ(rotationZ);
 
-//        main.getGame().translate(0, 100, 0);
-
-        for(int i = 0; i < particles.length; i++) {
+        for (Particle particle : particles) {
             main.getGame().pushMatrix();
-            main.getGame().rotateX(particles[i].rotationX);
-            main.getGame().rotateY(particles[i].rotationY);
-            main.getGame().rotateZ(particles[i].rotationZ);
-            main.getGame().translate(0, 0, particles[i].distance);
+            main.getGame().rotateX(particle.rotationX);
+            main.getGame().rotateY(particle.rotationY);
+            main.getGame().rotateZ(particle.rotationZ);
+            main.getGame().translate(0, 0, particle.distance);
 
-//            main.getGame().fill(255, 255, 255, 64);
-//            main.getGame().rect(-100, -100, 200, 200);
             main.getGame().tint(
-                    particles[i].randomColor.r,
-                    particles[i].randomColor.g,
-                    particles[i].randomColor.b,
+                    particle.randomColor.r,
+                    particle.randomColor.g,
+                    particle.randomColor.b,
                     16
             );
             main.getGame().scale(9f);
             main.getGame().image(particleImage, 0, 0);
             main.getGame().noTint();
-            /*main.getGame().fill(
-                    particles[i].randomColor.r,
-                    particles[i].randomColor.g,
-                    particles[i].randomColor.b,
-                    255);
-            main.getGame().circle(0, 0, 128f);*/
+
 
             main.getGame().popMatrix();
-
-//            main.getGame().setMatrix(original);
         }
 
 

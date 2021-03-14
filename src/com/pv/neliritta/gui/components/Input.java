@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 * Used to get user input. Can be customized to only allow numbers, dates or binary and etc.
 * */
 public class Input implements Component {
-    Main main;
+    final Main main;
 
     /* Boundaries of the button */
     public int x, y, width, height;
@@ -53,12 +53,16 @@ public class Input implements Component {
     public String getInput() { return currentText + newText; }
 
     /* Properties */
+    public static final Pattern RESULT_PATTERN_NUMBERS = Pattern.compile("[0-9]+");
     public static final Pattern CHARACTER_PATTERN_NUMBERS = Pattern.compile("[0-9]");
-    public static final Pattern CHARACTER_PATTERN_FILENAME = Pattern.compile("[a-zA-Z0-9_\\-]");
+    public static final Pattern RESULT_PATTERN_FILENAME = Pattern.compile("[ a-zA-Z0-9_\\-]+");
+    public static final Pattern CHARACTER_PATTERN_FILENAME = Pattern.compile("[ a-zA-Z0-9_\\-]");
 
     public Pattern resultPattern;
     public Pattern characterPattern;
     public int maximumLength = 64;
+
+    public void clear() { currentText = ""; newText = ""; }
 
     public Input(Main main,
                  Constraint xConstraint, Constraint yConstraint,
@@ -93,20 +97,11 @@ public class Input implements Component {
         isMouseOver = false;
         isMouseDown = false;
 
-        isMouseOver =
-                Utilities.isPointInsideTriangle(
-                        realTopLeftX, realTopLeftY,
-                        realTopLeftX, realBottomRightY,
-                        realBottomRightX, realTopLeftY,
-                        main.getGame().mouseX,
-                        main.getGame().mouseY)
-                        ||
-                        Utilities.isPointInsideTriangle(
-                                realBottomRightX, realTopLeftY,
-                                realTopLeftX, realBottomRightY,
-                                realBottomRightX, realBottomRightY,
-                                main.getGame().mouseX,
-                                main.getGame().mouseY);
+        isMouseOver = Utilities.isMouseInsidePerspectiveRectangle(
+                main,
+                realTopLeftX, realTopLeftY,
+                realBottomRightX, realBottomRightY
+        );
 
         if(isMouseOver) {
             /* If mouse is being pressed while it's inside the button */
@@ -133,7 +128,7 @@ public class Input implements Component {
         if(isActive) {
             Matcher characterMatcher = characterPattern.matcher(main.getGame().readCharacters);
             StringBuilder stringBuilder = new StringBuilder(newText);
-            while(characterMatcher.find()) {
+            while(characterMatcher.find() && (currentText.length() + stringBuilder.length()) < maximumLength) {
                 stringBuilder.append(characterMatcher.group());
             }
             newText = stringBuilder.toString();

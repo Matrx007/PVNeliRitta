@@ -2,10 +2,13 @@ package com.pv.neliritta.gui.states;
 // Written by Rainis Randmaa
 
 import com.pv.neliritta.GUI;
+import com.pv.neliritta.backend.BackEnd;
 import com.pv.neliritta.backend.SaveManager;
 import com.pv.neliritta.gui.Component;
 import com.pv.neliritta.gui.components.Button;
+import com.pv.neliritta.gui.components.Label;
 import com.pv.neliritta.gui.components.ScrollList;
+import com.pv.neliritta.gui.ingame.Board;
 import com.pv.neliritta.localization.Localization;
 
 import java.util.ArrayList;
@@ -22,40 +25,64 @@ public class LoadGame implements State {
 
         components = new HashMap<>();
 
+        float fieldWidth = 480;
+        float fieldHeight = 64;
+
+        components.put("label", new Label(gui.main,
+                () -> 0,
+                () -> -6*fieldHeight,
+                () -> fieldWidth,
+                () -> 64,
+                Localization.reference("main menu", "load_game")
+        ));
+
         components.put("list", new ScrollList(gui.main,
                 () -> 0,
-                () -> -4*64,
-                () -> 480,
+                () -> -4*fieldHeight,
+                () -> fieldWidth,
                 () -> 64,
                 8,
                 new Localization.Term[0],
                 () -> {
-//                    ScrollList me = ((ScrollList)components.get("list"));
-//                    BackEnd newBackEnd = SaveManager.loadGame(me.getCurrentEntry());
-//                    gui.inGame.board = new Board()
+                    System.out.println("double clicked");
+                    ScrollList me = ((ScrollList)components.get("list"));
+
+                    Localization.Term term = me.getCurrentEntry();
+                    if(term == null) {
+                        return;
+                    }
+
+                    System.out.println("at 0");
+
+                    BackEnd newBackEnd = SaveManager.loadGame(me.getCurrentEntry().value);
+
+                    if(newBackEnd == null) {
+                        System.out.println("Save file couldn't be opened");
+                        return;
+                    }
+                    System.out.println("at 1");
+
+                    gui.inGame.board = new Board(gui.main, newBackEnd);
+                    gui.state = GUI.State.IN_GAME;
                 }
         ));
 
         components.put("refresh", new Button(gui.main,
                 () -> 0,
-                () -> 4*64+64,
-                () -> 480,
+                () -> 4*fieldHeight+fieldHeight,
+                () -> fieldWidth,
                 () -> 64,
                 Localization.reference("load game", "refresh"),
-                () -> {
-                    refreshFileList();
-                }
+                this::refreshFileList
         ));
 
         components.put("back", new Button(gui.main,
                 () -> 0,
-                () -> 4*64+64*3,
-                () -> 240,
+                () -> 4*fieldHeight+fieldHeight*3,
+                () -> fieldWidth/2,
                 () -> 64,
                 Localization.reference("load game", "main_menu"),
-                () -> {
-                    gui.state = GUI.State.MAIN_MENU;
-                }
+                () -> gui.state = GUI.State.MAIN_MENU
         ));
     }
 
@@ -73,6 +100,13 @@ public class LoadGame implements State {
     }
 
     @Override
+    public void resize() {
+        for(Component component : components.values()) {
+            component.resize();
+        }
+    }
+
+    @Override
     public void update(GUI gui, double deltaTime) {
 
         for(Component component : components.values()) {
@@ -84,13 +118,6 @@ public class LoadGame implements State {
     public void render(GUI gui) {
         for(Component component : components.values()) {
             component.render();
-        }
-    }
-
-    @Override
-    public void resize() {
-        for(Component component : components.values()) {
-            component.resize();
         }
     }
 }

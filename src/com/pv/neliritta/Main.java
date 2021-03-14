@@ -1,17 +1,13 @@
 package com.pv.neliritta;
 // Written by Rainis Randmaa
 
-import com.pv.neliritta.gui.ingame.Board;
 import com.pv.neliritta.localization.Localization;
 import com.ydgames.mxe.Game;
 import com.ydgames.mxe.GameContainer;
 import processing.core.PConstants;
-import processing.core.PImage;
 
 import java.io.File;
 import java.io.IOException;
-
-import static jogamp.common.os.elf.SectionArmAttributes.Tag.File;
 
 // MX Engine is a custom (mostly) 2D game engine which is built on top of the Processing framework.
 // It provides better way to handle user input and an object management system (which I will not be using in this project)
@@ -21,7 +17,7 @@ public class Main extends GameContainer {
     }
 
     /* Engine stuff */
-    private GUI gui;
+    public GUI gui;
 
     /* Appearance */
     AbstractSpaceBackground background;
@@ -40,6 +36,7 @@ public class Main extends GameContainer {
     public void setup() {
         // Create "save" folder if it doesn't exist yet
         try {
+            //noinspection ResultOfMethodCallIgnored
             new File("/save/").createNewFile();
         } catch (IOException ignored) {
         }

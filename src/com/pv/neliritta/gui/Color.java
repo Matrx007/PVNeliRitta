@@ -2,7 +2,10 @@ package com.pv.neliritta.gui;
 // Written by Rainis Randmaa
 
 public class Color {
-    public int r, g, b, a;
+    public final int r;
+    public final int g;
+    public final int b;
+    public final int a;
 
     public Color(int r, int g, int b, int a) {
         this.r = r;
