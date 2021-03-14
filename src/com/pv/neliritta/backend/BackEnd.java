@@ -194,8 +194,7 @@ public class BackEnd {
     *  -1 should only be used when an error occurred.
     * */
     public int executeComputerTurn() {
-        System.out.println("Computer");
-        /* TODO */
+        /* TODO Debug */
         switch (difficulty) {
             case NORMAL:
                 int pLastX, pLastY;
