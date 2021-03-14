@@ -168,17 +168,17 @@ public class Board implements Component {
             if(computerThinkingTime < 0) {
                 int column = backEnd.executeComputerTurn();
 
-                // Find the first free slot in that column, used to display ball dropping animation
-                int firstFreeSlot = boardHeight;
-                for (int i = 0; i < backEnd.currentBoardState()[column].length; i++) {
-                    if (backEnd.currentBoardState()[column][i] == 0) {
-                        firstFreeSlot = i;
-                        break;
-                    }
-                }
-
                 // If the turn was successful, computer will take a turn now
                 if(column > -1) {
+
+                    // Find the first free slot in that column, used to display ball dropping animation
+                    int firstFreeSlot = boardHeight;
+                    for (int i = 0; i < backEnd.currentBoardState()[column].length; i++) {
+                        if (backEnd.currentBoardState()[column][i] == 0) {
+                            firstFreeSlot = i;
+                            break;
+                        }
+                    }
 
                     computerThinkingTime = 0;
                     whoseTurn = 1;
