@@ -10,4 +10,5 @@ public class SaveData implements java.io.Serializable {
     public int[][] board;
     public int whoseTurn;
     public BackEnd.Difficulty difficulty;
+    public boolean againstComputer;
 }

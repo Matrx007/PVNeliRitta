@@ -22,7 +22,7 @@ public class SaveManager {
         // Tries to do its thing
         try {
             // Makes new output stream
-            objectOutputStream = new ObjectOutputStream(Files.newOutputStream(Paths.get("save/" + saveName)));
+            objectOutputStream = new ObjectOutputStream(Files.newOutputStream(Paths.get("save/" + saveName + ".sav")));
             // Sends data to stream
             objectOutputStream.writeObject(save);
         // When done close stream
@@ -43,7 +43,7 @@ public class SaveManager {
         // Tries to do its thing
         try {
             // Makes new input stream
-            objectInputStream = new ObjectInputStream(Files.newInputStream(Paths.get("save/" + saveName)));
+            objectInputStream = new ObjectInputStream(Files.newInputStream(Paths.get("save/" + saveName + ".sav")));
             // Reads data from stream and returns it
             return objectInputStream.readObject();
         // When done close stream
@@ -64,6 +64,7 @@ public class SaveManager {
         save.board = backEnd.currentBoardState();
         save.whoseTurn = backEnd.getWhoseTurn();
         save.difficulty = backEnd.getDifficulty();
+        save.againstComputer = backEnd.againstComputer;
         // Calling saveing method
         saveToFile(save, saveName);
     }
@@ -79,7 +80,7 @@ public class SaveManager {
             // Getting saveData from loading a save
             SaveData save = (SaveData) loadSaveFile(saveName);
             // Making new BackEnd with save data
-            return new BackEnd(save.board, save.whoseTurn, save.difficulty);
+            return new BackEnd(save.board, save.whoseTurn, save.difficulty, save.againstComputer);
         } catch (Exception e) {
             /* TODO: Do something with error */
             // Logs Error To System logger
@@ -93,7 +94,9 @@ public class SaveManager {
         File[] files = new File("save/").listFiles();
         ArrayList<String> fileNames = new ArrayList<String>();
         for (File file: files) {
-            fileNames.add(file.getName());
+            if (file.getName().substring(file.getName().length() - 4).equals(".sav")) {
+                fileNames.add(file.getName().substring(0, file.getName().length() - 4));
+            }
         }
         return fileNames;
     }
